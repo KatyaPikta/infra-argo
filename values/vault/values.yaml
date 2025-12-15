@@ -1,6 +1,6 @@
 global:
   enabled: true
-  tlsDisable: true
+  tlsDisable: true #tls disable
 
 injector:
   enabled: true
@@ -31,11 +31,17 @@ server:
     limits:
       memory: "512Mi"
       cpu: "500m"
-
   service:
     enabled: true
     type: ClusterIP
     port: 8200
+  ingress:
+    enabled: true
+    ingressClassName: "traefik"
+    hosts:
+      - host: "vault.task3.app"
+    tls:
+      - secretName: vault-tls
 
 ui:
   enabled: true
