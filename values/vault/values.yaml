@@ -1,0 +1,44 @@
+global:
+  enabled: true
+  tlsDisable: true
+
+injector:
+  enabled: true
+  resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 50m
+      memory: 64Mi
+  logLevel: "info"
+
+
+server:
+  enabled: true
+  ha:
+    enabled: false          
+  dataStorage:
+    enabled: true
+    size: 1Gi
+    storageClass: "do-block-storage"
+    accessMode: ReadWriteOnce
+  affinity: {}        
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "250m"
+    limits:
+      memory: "512Mi"
+      cpu: "500m"
+
+  service:
+    enabled: true
+    type: ClusterIP
+    port: 8200
+
+ui:
+  enabled: true
+
+csi:
+  enabled: false 

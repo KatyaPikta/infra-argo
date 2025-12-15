@@ -1,0 +1,50 @@
+global:
+  namespace: external-secret
+  createNamespace: true
+
+operator:
+  enabled: true
+  image:
+    repository: external-secrets/external-secrets
+    tag: v0.9.0
+    pullPolicy: IfNotPresent
+  
+  resources:
+    limits:
+      memory: "256Mi"
+      cpu: "300m"
+    requests:
+      memory: "128Mi"
+      cpu: "100m"
+  
+  webhook:
+    enabled: true
+  
+  certController:
+    enabled: true
+  
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 1000
+  
+  logLevel: info
+
+vault:
+  enabled: true
+  address: "http://vault-ui.external-secret.svc.cluster.local:8200"
+  path: "secret"
+  version: "v2"
+  
+  serviceAccount:
+    name: external-secrets-vault
+    create: true
+  
+  policies:
+    - name: external-secrets
+      rules: |
+        path "secret/data/*" {
+          capabilities = ["read"]
+        }
+        path "secret/metadata/*" {
+          capabilities = ["list"]
+        }
