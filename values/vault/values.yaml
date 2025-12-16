@@ -20,7 +20,7 @@ server:
     enabled: false          
   dataStorage:
     enabled: true
-    size: 1Gi
+    size: 10Gi
     storageClass: "do-block-storage"
     accessMode: ReadWriteOnce
   affinity: {}        
