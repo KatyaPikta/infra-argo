@@ -1,17 +1,6 @@
 global:
   enabled: true
-  tlsDisable: true #tls disable
-
-injector:
-  enabled: true
-  resources:
-    limits:
-      cpu: 100m
-      memory: 128Mi
-    requests:
-      cpu: 50m
-      memory: 64Mi
-  logLevel: "info"
+  tlsDisable: true
 
 
 server:
@@ -42,6 +31,17 @@ server:
       - host: "vault.task3.app"
     tls:
       - secretName: vault-tls
+
+injector:
+  enabled: true
+  resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 50m
+      memory: 64Mi
+  logLevel: "info"
 
 ui:
   enabled: true
