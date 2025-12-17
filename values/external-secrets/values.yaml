@@ -1,7 +1,7 @@
 fullnameOverride: "external-secrets"
 namespace: "external-secret"
 
-installCRDs: true
+installCRDS: true
 
 replicaCount: 2
 
