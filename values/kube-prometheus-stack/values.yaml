@@ -20,7 +20,7 @@ prometheus:
         cpu: 1000m
         
     retention: 10d
-    retentionSize: "50Gi"
+    retentionSize: "50GiB"
     
     podMonitorSelector: {}
     serviceMonitorSelector: {}
