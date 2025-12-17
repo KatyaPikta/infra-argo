@@ -7,7 +7,7 @@ spec:
   source:
     repoURL: https://github.com/KatyaPikta/infra-argo.git
     targetRevision: HEAD
-    chart: charts/vault
+    path: charts/vault
     helm:
       valueFiles:
       - values/vault/values.yaml
