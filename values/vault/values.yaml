@@ -9,8 +9,8 @@ server:
     enabled: false          
   dataStorage:
     enabled: true
-    size: 10Gi
-    storageClass: "local-do-disks"
+    size: 2Gi
+    storageClass: "do-block-storage"
     accessMode: ReadWriteOnce
   affinity: {}        
   resources:
