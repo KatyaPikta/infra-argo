@@ -9,6 +9,7 @@ spec:
     targetRevision: HEAD
     path: charts/kube-prometheus-stack
     helm:
+      skipCrds: true
       valueFiles:
         - "../../values/kube-prometheus-stack/values.yaml"
   destination:
