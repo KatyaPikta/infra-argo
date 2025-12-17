@@ -8,10 +8,10 @@ spec:
   source:
     repoURL: https://github.com/KatyaPikta/infra-argo.git
     targetRevision: HEAD
-    chart: charts/vault
+    chart: ../charts/vault
     helm:
       valueFiles:
-      - values/vault/values.yaml
+      - ../values/vault/values.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: vault
