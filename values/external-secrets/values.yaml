@@ -1,4 +1,4 @@
 fullnameOverride: "external-secrets"
 namespace: "external-secret"
 
-installCRDs: false
+installCRDs: true
