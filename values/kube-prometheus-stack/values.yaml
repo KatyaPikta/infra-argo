@@ -10,7 +10,7 @@ prometheus:
           accessModes: ["ReadWriteOnce"]
           resources:
             requests:
-              storage: 50Gi
+              storage: 10Gi
     resources:
       requests:
         memory: 1Gi
@@ -20,7 +20,7 @@ prometheus:
         cpu: 1000m
         
     retention: 10d
-    retentionSize: "50GiB"
+    retentionSize: "9GiB"
     
     podMonitorSelector: {}
     serviceMonitorSelector: {}
@@ -35,7 +35,7 @@ alertmanager:
           accessModes: ["ReadWriteOnce"]
           resources:
             requests:
-              storage: 10Gi
+              storage: 5Gi
     resources:
       requests:
         memory: 256Mi
@@ -49,7 +49,7 @@ grafana:
   adminPassword: "admin"
   persistence:
     enabled: true
-    size: 10Gi
+    size: 5Gi
     accessModes: ["ReadWriteOnce"]
   resources:
     requests:
