@@ -70,6 +70,12 @@ grafana:
         editable: true
         options:
           path: /var/lib/grafana/dashboards/default
+  additionalDataSources:
+    - name: Loki
+      type: loki
+      access: proxy
+      url: http://loki:3100
+
 
 prometheusOperator:
   enabled: true
