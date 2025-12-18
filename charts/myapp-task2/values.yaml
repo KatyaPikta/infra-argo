@@ -86,7 +86,7 @@ redis:
 
 ingress:
   enabled: true
-  host: 129.212.192.135
+  host: task3.app
 
 configMap:
   enabled: true
