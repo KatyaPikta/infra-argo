@@ -13,3 +13,10 @@ clusterSecretStore:
     role: external-secrets
     serviceAccountName: external-secrets
     serviceAccountNamespace: external-secret
+
+externalSecrets:
+  grafana-admin-secret:
+    enabled: true
+    namespace: monitoring
+    name: grafana-admin-secret
+    remoteKey: secret/monitoring/grafana
