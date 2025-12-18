@@ -86,7 +86,7 @@ redis:
 
 ingress:
   enabled: true
-  host: task2.local
+  host: 129.212.192.135
 
 configMap:
   enabled: true
