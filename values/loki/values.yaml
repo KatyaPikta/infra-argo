@@ -1,7 +1,6 @@
 deploymentMode: SingleBinary
 
 singleBinary:
-  enabled: true
   replicas: 1
   persistence:
     enabled: true
