@@ -26,17 +26,17 @@ spec:
         - name: MYSQL_ROOT_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: mysql-credentials
+              name: app-secrets
               key: MYSQL_ROOT_PASSWORD
         - name: MYSQL_DATABASE
           valueFrom:
             secretKeyRef:
-              name: mysql-credentials
+              name: app-secrets
               key: MYSQL_DATABASE
         - name: MYSQL_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: mysql-credentials
+              name: app-secrets
               key: MYSQL_PASSWORD
         volumeMounts:
         - name: db-data
