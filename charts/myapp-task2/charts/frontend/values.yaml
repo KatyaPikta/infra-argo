@@ -1,0 +1,18 @@
+replicaCountFrontend: 1
+
+frontend:
+  image:
+    repository: piktakatya/my-frontend
+    tag: "{{ .Values.imageTag }}"
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 80
+    targetPort: 80
+  resources:
+    requests:
+      memory: "128Mi"
+      cpu: "100m"
+    limits:
+      memory: "256Mi"
+      cpu: "200m"

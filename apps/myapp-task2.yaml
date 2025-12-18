@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: myapp-task2
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/KatyaPikta/infra-argo.git
+    targetRevision: HEAD
+    path: charts/myapp-task2
+    helm:
+      skipCrds: true
+      valueFiles:
+        - "../../values/myapp-task2/values.yaml"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: myapp-task2
+    
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true

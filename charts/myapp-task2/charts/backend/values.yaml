@@ -1,0 +1,17 @@
+replicaCountBackend: 2
+backend:
+  image:
+    repository: piktakatya/my-backend
+    tag: "{{ .Values.imageTag }}"
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 5000
+    targetPort: 5000
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "200m"
+    limits:
+      memory: "512Mi"
+      cpu: "500m"
