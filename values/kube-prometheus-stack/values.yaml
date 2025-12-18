@@ -74,8 +74,7 @@ grafana:
     - name: Loki
       type: loki
       access: proxy
-      url: http://loki:3100
-
+      url: http://loki.logs.svc.cluster.local:3100
 
 prometheusOperator:
   enabled: true
