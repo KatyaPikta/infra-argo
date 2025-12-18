@@ -1,5 +1,5 @@
 deploymentMode: SingleBinary
-
+singleBinaryReplicas: 1
 read:
   replicas: 0
 write:
