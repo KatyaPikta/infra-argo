@@ -1,0 +1,7 @@
+mysql:
+  persistence:
+    storageClass: "do-block-storage"
+
+redis:
+  persistence:
+    storageClass: "do-block-storage"
