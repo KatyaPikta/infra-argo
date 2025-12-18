@@ -1,0 +1,47 @@
+singleBinary:
+  enabled: true
+  replicas: 1
+  persistence:
+    enabled: true
+    accessModes:
+      - ReadWriteOnce
+    size: 10Gi
+    storageClassName: "do-block-storage"
+
+loki:
+  enabled: true
+  auth_enabled: false
+  commonConfig:
+    path_prefix: /var/loki
+    replication_factor: 1
+  storage:
+    type: 'filesystem'
+  schema_config:
+    configs:
+      - from: 2025-09-01
+        store: tsdb
+        object_store: filesystem
+        schema: v13
+        index:
+          prefix: index_
+          period: 24h
+  compactor:
+    working_directory: /var/loki/compactor
+    delete_request_store: filesystem
+    retention_enabled: true
+
+# Retention 30 дней
+  limits_config:
+    retention_period: 720h
+  
+  table_manager:
+    retention_deletes_enabled: true
+    retention_period: 720h
+
+resources:
+  requests:
+    memory: 512Mi
+    cpu: 200m
+  limits:
+    memory: 2Gi
+    cpu: 1000m

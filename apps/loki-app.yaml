@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: loki
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/KatyaPikta/infra-argo.git
+    targetRevision: HEAD
+    path: charts/loki
+    helm:
+      skipCrds: true
+      valueFiles:
+        - "../../values/loki/values.yaml"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: logs
+    
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
