@@ -5,3 +5,7 @@ mysql:
 redis:
   persistence:
     storageClass: "do-block-storage"
+
+frontend:
+  image:
+    tag: "latest"
