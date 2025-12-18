@@ -2,3 +2,14 @@ fullnameOverride: "external-secrets"
 namespace: "external-secret"
 
 installCRDs: false
+
+clusterSecretStore:
+  enabled: true
+  name: vault-backend
+  vaultServer: "http://hashicorp-vault.vault:8200"
+  vaultPath: secret
+  kubernetes:
+    mountPath: kubernetes
+    role: external-secrets
+    serviceAccountName: external-secrets
+    serviceAccountNamespace: external-secret
