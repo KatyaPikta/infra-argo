@@ -21,7 +21,7 @@ frontend:
 backend:
   image:
     repository: piktakatya/my-backend
-    tag: "{{ .Values.imageTag }}"
+    tag: "latest"
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP

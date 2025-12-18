@@ -3,7 +3,7 @@ replicaCountFrontend: 1
 frontend:
   image:
     repository: piktakatya/my-frontend
-    tag: "{{ .Values.imageTag }}"
+    tag: "latest"
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
