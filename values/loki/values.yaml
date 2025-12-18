@@ -31,12 +31,7 @@ loki:
     delete_request_store: filesystem
     retention_enabled: true
 
-# Retention 30 дней
   limits_config:
-    retention_period: 720h
-  
-  table_manager:
-    retention_deletes_enabled: true
     retention_period: 720h
 
 resources:
