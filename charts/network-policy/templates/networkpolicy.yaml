@@ -62,8 +62,8 @@ spec:
   ingress:
   - ports:
     - port: 80
-    - from:
-      - namespaceSelector: {}
+    from:
+    - namespaceSelector: {}
   
   egress:
   - to:
