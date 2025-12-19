@@ -1,0 +1,15 @@
+{{- range .Values.roles }}
+{{- if .enabled }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ .name }}
+  labels:
+    environment: {{ $.Values.global.environment | quote }}
+    team: {{ $.Values.global.team | quote }}
+    managed-by: helm
+rules:
+{{- toYaml .rules | nindent 2 }}
+---
+{{- end }}
+{{- end }}

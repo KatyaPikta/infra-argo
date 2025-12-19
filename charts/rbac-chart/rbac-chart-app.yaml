@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: rbac-chart
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/KatyaPikta/infra-argo.git
+    targetRevision: HEAD
+    path: charts/rbac-chart
+    helm:
+      skipCrds: true
+      valueFiles:
+        - "../../values/rbac-chart/values.yaml"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+    
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true

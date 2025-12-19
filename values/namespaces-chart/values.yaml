@@ -1,0 +1,96 @@
+namespaces:
+
+  - name: "myapp-task2"
+    labels:
+      kubernetes.io/metadata.name: myapp-task2
+      environment: "production"
+
+  - name: "myapp-task2-staging"
+    labels:
+      kubernetes.io/metadata.name: myapp-task2-staging
+      environment: "staging"
+
+  - name: "vault"
+    ensureExists: true
+    createIfMissing: true
+    labels:
+      kubernetes.io/metadata.name: vault
+
+  - name: "external-secret"
+    ensureExists: true
+    createIfMissing: true
+    labels:
+      kubernetes.io/metadata.name: external-secret
+
+  - name: "argocd"
+    ensureExists: true
+    createIfMissing: true
+    labels:
+      kubernetes.io/metadata.name: argocd
+
+  - name: "monitoring"
+    ensureExists: true
+    createIfMissing: true
+    labels:
+      kubernetes.io/metadata.name: monitoring
+
+  - name: "logs"
+    ensureExists: true
+    createIfMissing: true
+    labels:
+      kubernetes.io/metadata.name: logs
+
+  - name: "cert-manager"
+    ensureExists: true
+    createIfMissing: true
+    labels:
+      kubernetes.io/metadata.name: cert-manager
+
+  - name: "traefik"
+    ensureExists: true
+    createIfMissing: true
+    labels:
+      kubernetes.io/metadata.name: traefik
+
+  - name: "kube-system"
+    ensureExists: true
+    createIfMissing: false
+    labels:
+      kubernetes.io/metadata.name: kube-system
+
+  - name: "kube-node-lease"
+    ensureExists: true
+    createIfMissing: false
+    labels:
+      kubernetes.io/metadata.name: kube-node-lease
+
+  - name: "kube-public"
+    ensureExists: true
+    createIfMissing: false
+    labels:
+      kubernetes.io/metadata.name: kube-public
+
+  - name: "default"
+    ensureExists: true
+    createIfMissing: false
+    labels:
+      kubernetes.io/metadata.name: default
+
+# resourceQuotas:
+#   enabled: true
+#   default:
+#     requests.cpu: "1"
+#     requests.memory: "2Gi"
+#     limits.cpu: "2"
+#     limits.memory: "4Gi"
+#     pods: "20"
+
+# limitRanges:
+#   enabled: true
+#   default:
+#     default:
+#       cpu: "500m"
+#       memory: "1Gi"
+#     defaultRequest:
+#       cpu: "200m"
+#       memory: "512Mi"
