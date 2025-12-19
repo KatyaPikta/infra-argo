@@ -78,6 +78,24 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
+  name: backend-allow-traefik
+  namespace: myapp-task2
+spec:
+  podSelector:
+    matchLabels:
+      component: backend
+      app: myapp-task2
+  ingress:
+  - ports:
+    - port: 5000
+    from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: traefik
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
   name: backend-allow-frontend
   namespace: myapp-task2
 spec:
