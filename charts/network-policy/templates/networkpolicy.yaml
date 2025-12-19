@@ -89,9 +89,7 @@ spec:
   - ports:
     - port: 5000
     from:
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: traefik
+    - namespaceSelector: {}
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
