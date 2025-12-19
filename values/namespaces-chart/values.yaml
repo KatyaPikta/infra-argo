@@ -76,6 +76,12 @@ namespaces:
     labels:
       kubernetes.io/metadata.name: default
 
+resourceQuotas:
+  enabled: false
+
+limitRanges:
+  enabled: false
+
 # resourceQuotas:
 #   enabled: true
 #   default:
