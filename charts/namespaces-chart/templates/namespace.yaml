@@ -15,65 +15,65 @@ metadata:
     {{- end }}
 {{- end }}
 
-{{- if .Values.resourceQuotas.enabled }}
-{{- range .Values.namespaces }}
----
-apiVersion: v1
-kind: ResourceQuota
-metadata:
-  name: default-resource-quota
-  namespace: {{ .name | quote }}
-  labels:
-    {{- include "namespace-chart.labels" $ | nindent 4 }}
-spec:
-  hard:
-    {{- $quota := default $.Values.resourceQuotas.default .resourceQuota }}
-    {{- if $quota.requests.cpu }}
-    requests.cpu: {{ $quota.requests.cpu | quote }}
-    {{- end }}
-    {{- if $quota.requests.memory }}
-    requests.memory: {{ $quota.requests.memory | quote }}
-    {{- end }}
-    {{- if $quota.limits.cpu }}
-    limits.cpu: {{ $quota.limits.cpu | quote }}
-    {{- end }}
-    {{- if $quota.limits.memory }}
-    limits.memory: {{ $quota.limits.memory | quote }}
-    {{- end }}
-    {{- if $quota.pods }}
-    pods: {{ $quota.pods | quote }}
-    {{- end }}
-{{- end }}
-{{- end }}
+# {{- if .Values.resourceQuotas.enabled }}
+# {{- range .Values.namespaces }}
+# ---
+# apiVersion: v1
+# kind: ResourceQuota
+# metadata:
+#   name: default-resource-quota
+#   namespace: {{ .name | quote }}
+#   labels:
+#     {{- include "namespace-chart.labels" $ | nindent 4 }}
+# spec:
+#   hard:
+#     {{- $quota := default $.Values.resourceQuotas.default .resourceQuota }}
+#     {{- if $quota.requests.cpu }}
+#     requests.cpu: {{ $quota.requests.cpu | quote }}
+#     {{- end }}
+#     {{- if $quota.requests.memory }}
+#     requests.memory: {{ $quota.requests.memory | quote }}
+#     {{- end }}
+#     {{- if $quota.limits.cpu }}
+#     limits.cpu: {{ $quota.limits.cpu | quote }}
+#     {{- end }}
+#     {{- if $quota.limits.memory }}
+#     limits.memory: {{ $quota.limits.memory | quote }}
+#     {{- end }}
+#     {{- if $quota.pods }}
+#     pods: {{ $quota.pods | quote }}
+#     {{- end }}
+# {{- end }}
+# {{- end }}
 
-{{- if .Values.limitRanges.enabled }}
-{{- range .Values.namespaces }}
----
-apiVersion: v1
-kind: LimitRange
-metadata:
-  name: default-limit-range
-  namespace: {{ .name | quote }}
-  labels:
-    {{- include "namespace-chart.labels" $ | nindent 4 }}
-spec:
-  limits:
-    - default:
-        {{- $default := default $.Values.limitRanges.default.default .limitRange.default }}
-        {{- if $default.cpu }}
-        cpu: {{ $default.cpu | quote }}
-        {{- end }}
-        {{- if $default.memory }}
-        memory: {{ $default.memory | quote }}
-        {{- end }}
-      defaultRequest:
-        {{- $defaultRequest := default $.Values.limitRanges.default.defaultRequest .limitRange.defaultRequest }}
-        {{- if $defaultRequest.cpu }}
-        cpu: {{ $defaultRequest.cpu | quote }}
-        {{- end }}
-        {{- if $defaultRequest.memory }}
-        memory: {{ $defaultRequest.memory | quote }}
-        {{- end }}
-      type: Container
-{{- end }}
-{{- end }}
+# {{- if .Values.limitRanges.enabled }}
+# {{- range .Values.namespaces }}
+# ---
+# apiVersion: v1
+# kind: LimitRange
+# metadata:
+#   name: default-limit-range
+#   namespace: {{ .name | quote }}
+#   labels:
+#     {{- include "namespace-chart.labels" $ | nindent 4 }}
+# spec:
+#   limits:
+#     - default:
+#         {{- $default := default $.Values.limitRanges.default.default .limitRange.default }}
+#         {{- if $default.cpu }}
+#         cpu: {{ $default.cpu | quote }}
+#         {{- end }}
+#         {{- if $default.memory }}
+#         memory: {{ $default.memory | quote }}
+#         {{- end }}
+#       defaultRequest:
+#         {{- $defaultRequest := default $.Values.limitRanges.default.defaultRequest .limitRange.defaultRequest }}
+#         {{- if $defaultRequest.cpu }}
+#         cpu: {{ $defaultRequest.cpu | quote }}
+#         {{- end }}
+#         {{- if $defaultRequest.memory }}
+#         memory: {{ $defaultRequest.memory | quote }}
+#         {{- end }}
+#       type: Container
+# {{- end }}
+# {{- end }}
