@@ -1,0 +1,153 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: deny-all-ingress
+  namespace: myapp-task2
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+  ingress: []
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: deny-all-egress  
+  namespace: myapp-task2
+spec:
+  podSelector: {}
+  policyTypes:
+    - Egress
+  egress: []
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-dns-monitoring
+  namespace: myapp-task2
+spec:
+  podSelector: {}
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+      podSelector:
+        matchLabels:
+          k8s-app: kube-dns
+    ports:
+    - protocol: UDP
+      port: 53
+    - protocol: TCP  
+      port: 53
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: monitoring
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: frontend-allow-ingress
+  namespace: myapp-task2
+spec:
+  podSelector:
+    matchLabels:
+      component: frontend
+      app: myapp-task2
+  ingress:
+  - ports:
+    - port: 80
+    - from:
+      - namespaceSelector: {}
+  
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          component: backend
+          app: myapp-task2
+    ports:
+    - port: 5000
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: backend-allow-frontend
+  namespace: myapp-task2
+spec:
+  podSelector:
+    matchLabels:
+      component: backend
+      app: myapp-task2
+  ingress:
+  - ports:
+    - port: 5000
+    from:
+    - podSelector:
+        matchLabels:
+          component: frontend
+          app: myapp-task2
+  
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          component: mysql
+          app: myapp-task2
+    ports:
+    - port: 3306
+  - to:
+    - podSelector:
+        matchLabels:
+          component: redis
+          app: myapp-task2
+    ports:
+    - port: 6379
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: mysql-allow-backend
+  namespace: myapp-task2
+spec:
+  podSelector:
+    matchLabels:
+      component: mysql
+      app: myapp
+  ingress:
+  - ports:
+    - port: 3306
+    from:
+    - podSelector:
+        matchLabels:
+          component: backend
+          app: myapp-task2
+  egress: []
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: redis-allow-backend
+  namespace: myapp-task2
+spec:
+  podSelector:
+    matchLabels:
+      component: redis
+      app: myapp-task2
+  ingress:
+  - ports:
+    - port: 6379
+    from:
+    - podSelector:
+        matchLabels:
+          component: backend
+          app: myapp-task2
+  egress: []

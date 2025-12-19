@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: network-policy
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/KatyaPikta/infra-argo.git
+    targetRevision: HEAD
+    path: charts/network-policy
+    helm:
+      skipCrds: true
+      valueFiles:
+        - "../../values/network-policy/values.yaml"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: myapp-task2
+    
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
