@@ -8,18 +8,17 @@ metadata:
 spec:
   ingressClassName: traefik
   rules:
-  - host: {{ .Values.ingress.host }}
-    http:
+  - http:
       paths:
       - path: /api/tasks
-        pathType: ImplementationSpecific
+        pathType: Prefix
         backend:
           service:
             name: {{ .Release.Name }}-backend
             port:
               number: 5000
       - path: /
-        pathType: ImplementationSpecific
+        pathType: Prefix
         backend:
           service:
             name: {{ .Release.Name }}-frontend
