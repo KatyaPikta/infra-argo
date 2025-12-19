@@ -16,6 +16,6 @@ mysql:
       cpu: "500m"
   persistence:
     enabled: true
-    storageClass: "standard"
+    storageClass: "do-block-storage"
     accessMode: ReadWriteOnce
     size: 8Gi

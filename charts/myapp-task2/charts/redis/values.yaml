@@ -16,6 +16,6 @@ redis:
       cpu: "200m"
   persistence:
     enabled: true
-    storageClass: "standard"
+    storageClass: "do-block-storage"
     accessMode: ReadWriteOnce
     size: 1Gi

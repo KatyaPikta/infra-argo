@@ -56,7 +56,7 @@ mysql:
      MYSQL_ROOT_PASSWORD: "cGFzcw=="
   persistence:
     enabled: true
-    storageClass: "standard"
+    storageClass: "do-block-storage"
     accessMode: ReadWriteOnce
     size: 8Gi
 
@@ -79,7 +79,7 @@ redis:
       cpu: "200m"
   persistence:
     enabled: true
-    storageClass: "standard"
+    storageClass: "do-block-storage"
     accessMode: ReadWriteOnce
     size: 1Gi
 
