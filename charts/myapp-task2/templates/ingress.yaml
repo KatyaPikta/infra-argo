@@ -12,7 +12,7 @@ spec:
   tls:
   - hosts:
     - task2.local
-    secretName: task2-local-tls  
+    secretName: task2-local-cert  
   rules:
   - host: task2.local
     http:
