@@ -23,6 +23,8 @@ spec:
       - name: wait-for-mysql
         image: busybox:1.35
         command: ['sh', '-c', 'until nc -z {{ .Release.Name }}-mysql 3306; do echo "Waiting for MySQL..."; sleep 2; done; echo "MySQL ready"']
+      - name: run-migrations
+        image: 
       containers:
       - name: {{ .Release.Name }}-backend
         image: "{{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag }}"
@@ -49,6 +51,13 @@ spec:
             secretKeyRef:
               name: app-secrets
               key: MYSQL_PASSWORD
+        startupProbe:
+          enabled: true
+          initialDelaySeconds: 0
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 30
+          path: /health
         livenessProbe:
           tcpSocket:
             port: 5000
