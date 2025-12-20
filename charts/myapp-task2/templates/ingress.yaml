@@ -9,6 +9,10 @@ metadata:
     cert-manager.io/cluster-issuer: selfsigned-issuer
 spec:
   ingressClassName: traefik
+  tls:
+  - hosts:
+    - task2.local
+    secretName: task2-local-tls  
   rules:
   - host: task2.local
     http:
