@@ -4,11 +4,14 @@ kind: Ingress
 metadata:
   name: {{ .Release.Name }}-ingress
   annotations:
-    traefik.ingress.kubernetes.io/router.entrypoints: web
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.tls: "true"
+    cert-manager.io/cluster-issuer: selfsigned-issuer
 spec:
   ingressClassName: traefik
   rules:
-  - http:
+  - host: task.local
+    http:
       paths:
       - path: /api/tasks
         pathType: Prefix
