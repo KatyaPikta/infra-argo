@@ -1,4 +1,4 @@
-apiVersion: apps/v2
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ .Release.Name }}-backend
@@ -62,13 +62,6 @@ spec:
           initialDelaySeconds: 5
           periodSeconds: 5
           timeoutSeconds: 10
-        startupProbe:
-          enabled: true
-          path: /health
-          initialDelaySeconds: 0
-          periodSeconds: 10
-          timeoutSeconds: 5
-          failureThreshold: 30
         resources:
           {{- toYaml .Values.backend.resources | nindent 12 }}
 
