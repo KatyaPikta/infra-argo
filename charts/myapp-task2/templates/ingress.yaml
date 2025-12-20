@@ -10,7 +10,7 @@ metadata:
 spec:
   ingressClassName: traefik
   rules:
-  - host: task.local
+  - host: task2.local
     http:
       paths:
       - path: /api/tasks
