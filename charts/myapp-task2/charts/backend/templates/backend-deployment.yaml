@@ -23,8 +23,6 @@ spec:
       - name: wait-for-mysql
         image: busybox:1.35
         command: ['sh', '-c', 'until nc -z {{ .Release.Name }}-mysql 3306; do echo "Waiting for MySQL..."; sleep 2; done; echo "MySQL ready"']
-      - name: run-migrations
-        image: 
       containers:
       - name: {{ .Release.Name }}-backend
         image: "{{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag }}"
