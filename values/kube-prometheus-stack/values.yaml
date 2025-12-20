@@ -25,6 +25,17 @@ prometheus:
     podMonitorSelector: {}
     serviceMonitorSelector: {}
     serviceMonitorNamespaceSelector: {}
+  additionalServiceMonitors:
+  - name: "myapp-task2"
+    selector:
+      matchLabels:
+        metrics: "true"
+    namespaceSelector:
+      any: true
+    endpoints:
+      - port: "http"
+        interval: 30s
+        path: /metrics
 
 alertmanager:
   enabled: true

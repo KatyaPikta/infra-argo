@@ -5,6 +5,7 @@ metadata:
   labels:
     {{- include "my-app.labels" . | nindent 4 }}
     component: database
+    metrics: "true"
 spec:
   replicas: 1
   selector:
