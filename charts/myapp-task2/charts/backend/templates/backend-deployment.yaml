@@ -51,13 +51,6 @@ spec:
             secretKeyRef:
               name: app-secrets
               key: MYSQL_PASSWORD
-        startupProbe:
-          enabled: true
-          initialDelaySeconds: 0
-          periodSeconds: 10
-          timeoutSeconds: 5
-          failureThreshold: 30
-          path: /health
         livenessProbe:
           tcpSocket:
             port: 5000
