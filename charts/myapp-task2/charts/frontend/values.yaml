@@ -16,3 +16,15 @@ frontend:
     limits:
       memory: "256Mi"
       cpu: "200m"
+
+pdb:
+  enabled: true
+  minAvailable: "50%"
+  maxUnavailable: 1
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 4
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
