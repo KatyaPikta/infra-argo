@@ -1,0 +1,28 @@
+replicaCountBackend: 2
+
+image:
+  repository: {{ .Values.backend.image.repository }}
+  tag: {{ .Values.backend.image.tag }}
+  pullPolicy: IfNotPresent
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 80
+resources:
+  requests:
+    memory: "128Mi"
+    cpu: "100m"
+  limits:
+    memory: "256Mi"
+    cpu: "200m"
+pdb:
+  enabled: true
+  minAvailable: "50%"
+  maxUnavailable: 1
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 4
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
