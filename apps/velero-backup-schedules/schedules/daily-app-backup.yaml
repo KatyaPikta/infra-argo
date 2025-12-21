@@ -1,0 +1,13 @@
+apiVersion: velero.io/v1
+kind: Schedule
+metadata:
+  name: daily-myapp-backup
+  namespace: backup
+spec:
+  schedule: "0 3 * * *"
+  template:
+    includedNamespaces:
+    - myapp-task2
+    defaultVolumesToRestic: true
+    ttl: 720h  # 30 дней
+    storageLocation: default
