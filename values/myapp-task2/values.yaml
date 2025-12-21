@@ -96,3 +96,15 @@ configMap:
     REDIS_PORT: "6379"  
     FLASK_ENV: "development"
     API_URL: ""
+
+pdb:
+  enabled: true
+  minAvailable: "50%"
+  maxUnavailable: 1
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 4
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
