@@ -50,7 +50,7 @@ credentials:
   existingSecret: velero-credentials
   mountPath: /credentials
 
-snapshotsEnabled: false
+snapshotsEnabled: true
 deployNodeAgent: true
 
 resources:
