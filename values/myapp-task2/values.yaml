@@ -8,8 +8,8 @@ redis:
 
 frontend:
   image:
-    tag: "latest"
+    tag: "afaf837a6ba4b5b2b90bf69b81aabd5063ad0915"
 
 backend:
   image:
-    tag: "latest"
+    tag: "afaf837a6ba4b5b2b90bf69b81aabd5063ad0915"
