@@ -54,6 +54,27 @@ alertmanager:
       limits:
         memory: 512Mi
         cpu: 500m
+    secrets:
+      - telegram-bot-secret
+    route:
+      receiver: 'telegram-alerts'
+      
+    receivers:
+    - name: 'telegram-alerts'
+      webhook_configs:
+      - url: 'https://api.telegram.org/bot8267216338:AAFLL7IWr8J-v8pKtKNeASkm92sJWj3q-2Y/sendMessage'
+        http_config:
+          authorization:
+            type: Bearer
+            credentials:
+              name: telegram-bot-secret
+              key: token
+          body: |
+            {
+              "chat_id": "-5005806102",
+              "text": "🚨 *Alert:* {{ .GroupLabels.alertname }}\n\n{{ range .Alerts }}{{ .Annotations.summary }}{{ end }}",
+              "parse_mode": "Markdown"
+            }
 
 grafana:
   enabled: true
