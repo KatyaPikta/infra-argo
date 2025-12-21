@@ -21,7 +21,7 @@ configuration:
         key: cloud
   volumeSnapshotLocation: 
     - name: default
-      provider: volumesnapshot
+      provider: volumesnapshot  
       config:
         region: fra1
 
@@ -32,7 +32,7 @@ extraObjects:
       name: do-csi-snapshotclass
       labels:
         velero.io/csi-volumesnapshot-class: "true"
-    driver: dobs.csi.digitaloceanspaces.com
+    driver: dobs.csi.digitalocean.com
     deletionPolicy: Delete
 
 features:
