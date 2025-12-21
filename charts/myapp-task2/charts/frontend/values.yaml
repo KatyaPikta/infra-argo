@@ -1,8 +1,8 @@
 replicaCountFrontend: 1
 
 image:
-  repository: {{ .Values.frontend.image.repository }}
-  tag: {{ .Values.frontend.image.tag }}
+  repository: piktakatya/my-frontend
+  tag: "latest"
   pullPolicy: IfNotPresent
 service:
   type: ClusterIP
@@ -15,6 +15,7 @@ resources:
   limits:
     memory: "256Mi"
     cpu: "200m"
+
 pdb:
   enabled: true
   minAvailable: "50%"
