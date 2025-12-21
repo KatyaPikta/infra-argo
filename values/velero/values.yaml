@@ -22,8 +22,9 @@ configuration:
         key: cloud
   volumeSnapshotLocation:
     - name: default
+      provider: digitalocean
       config:
-      region: fra1
+        region: fra1
 
 credentials:
   useSecret: true
