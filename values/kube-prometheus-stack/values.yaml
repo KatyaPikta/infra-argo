@@ -57,16 +57,15 @@ alertmanager:
     secrets:
       - telegram-bot-secret
   config:
+    global:
+      resolve_timeout: 5m
+      
     route:
-      group_by: ['namespace']
-      group_wait: 30s
-      group_interval: 5m
-      repeat_interval: 12h
       receiver: 'telegram-alerts'
-      routes:
-      - receiver: 'telegram-alerts'
-        matchers:
-          - alertname = ".*"
+      group_by: ['alertname']
+      group_wait: 10s
+      group_interval: 10s
+      repeat_interval: 1h
 
     receivers:
     - name: 'telegram-alerts'
@@ -74,27 +73,6 @@ alertmanager:
       - url: 'https://api.telegram.org/bot8267216338:AAFLL7IWr8J-v8pKtKNeASkm92sJWj3q-2Y/sendMessage'
         send_resolved: true
         http_config:
-          authorization:
-            type: Bearer
-            credentials:
-              name: telegram-bot-secret
-              key: token
-          body: |
-            {
-              "chat_id": "-5005806102",
-              "text": "🚨 *Alert:* {{ .GroupLabels.alertname }}\n\n{{ range .Alerts }}{{ .Annotations.summary }}{{ end }}",
-              "parse_mode": "Markdown"
-            }
-    - name: 'telegram-all'
-      webhook_configs:
-      - url: 'https://api.telegram.org/bot8267216338:AAFLL7IWr8J-v8pKtKNeASkm92sJWj3q-2Y/sendMessage'
-        send_resolved: true
-        http_config:
-          authorization:
-            type: Bearer
-            credentials:
-              name: telegram-bot-secret
-              key: token
           body: |
             {
               "chat_id": "-5005806102",
