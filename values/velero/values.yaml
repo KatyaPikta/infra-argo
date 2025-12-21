@@ -9,17 +9,20 @@ initContainers:
 configuration:
   provider: aws
   backupStorageLocation:
-    bucket: terraform-state-bucket-task3
-    name: default
-    provider: aws
-    config:
-      region: fra1
-      s3Url: https://fra1.digitaloceanspaces.com
-      s3ForcePathStyle: "true"
-      publicUrl: https://terraform-state-bucket-task3.fra1.digitaloceanspaces.com
+    - name: default
+      bucket: terraform-state-bucket-task3
+      provider: aws
+      config:
+        region: fra1
+        s3Url: https://fra1.digitaloceanspaces.com
+        s3ForcePathStyle: "true"
+        publicUrl: https://terraform-state-bucket-task3.fra1.digitaloceanspaces.com
+      credential:
+        name: velero-credentials
+        key: cloud
   volumeSnapshotLocation:
-    name: default
-    config:
+    - name: default
+      config:
       region: fra1
 
 credentials:
