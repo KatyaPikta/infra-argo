@@ -21,9 +21,7 @@ configuration:
         key: cloud
   volumeSnapshotLocation: 
     - name: default
-      provider: volumesnapshot  
-      config:
-        region: fra1
+      provider: aws
 
 extraObjects:
   - apiVersion: snapshot.storage.k8s.io/v1
