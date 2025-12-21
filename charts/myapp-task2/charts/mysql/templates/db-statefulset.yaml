@@ -16,6 +16,12 @@ spec:
       labels:
         app: {{ .Release.Name }}-mysql
         {{- include "my-app.selectorLabels" . | nindent 8 }}
+      annotations:
+        backup.velero.io/backup-volumes: db-data
+        pre.hook.backup.velero.io/command: '["/bin/bash", "-c", "mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -e \"FLUSH TABLES WITH READ LOCK; SELECT SLEEP(5);\" &"]'
+        pre.hook.backup.velero.io/container: mysql
+        post.hook.backup.velero.io/command: '["/bin/bash", "-c", "mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -e \"UNLOCK TABLES;\" &"]'
+        post.hook.backup.velero.io/container: mysql
     spec:
       containers:
       - name: {{ .Release.Name }}-mysql
