@@ -7,11 +7,10 @@ initContainers:
         name: plugins
 
 configuration:
-  provider: aws
   backupStorageLocation:
     - name: default
       bucket: terraform-state-bucket-task3
-      provider: aws
+      provider: digitalocean
       config:
         region: fra1
         s3Url: https://fra1.digitaloceanspaces.com
@@ -20,11 +19,7 @@ configuration:
       credential:
         name: velero-credentials
         key: cloud
-  volumeSnapshotLocation:
-    - name: default
-      provider: digitalocean
-      config:
-        region: fra1
+  volumeSnapshotLocation: []
 
 credentials:
   useSecret: true
@@ -32,7 +27,7 @@ credentials:
   mountPath: /credentials
 
 snapshotsEnabled: false
-deployRestic: true
+deployNodeAgent: true
 
 resources:
   requests:
