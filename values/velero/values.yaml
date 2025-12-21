@@ -21,7 +21,16 @@ configuration:
         key: cloud
   volumeSnapshotLocation: 
     - name: default
+      bucket: velero-backups-task3
       provider: aws
+      config:
+        region: fra1
+        s3Url: https://fra1.digitaloceanspaces.com
+        s3ForcePathStyle: "true"
+        publicUrl: https://velero-backups-task3.fra1.digitaloceanspaces.com
+      credential:
+        name: velero-credentials
+        key: cloud
 
 extraObjects:
   - apiVersion: snapshot.storage.k8s.io/v1
