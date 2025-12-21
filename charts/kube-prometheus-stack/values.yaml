@@ -532,23 +532,18 @@ alertmanager:
       - target_matchers:
           - 'alertname = InfoInhibitor'
     route:
-      group_by: ['alertname']
+      group_by: ['namespace']
       group_wait: 30s
       group_interval: 5m
       repeat_interval: 12h
-      receiver: 'telegram-alerts'
+      receiver: 'null'
+      routes:
+      - receiver: 'null'
+        matchers:
+          - alertname = "Watchdog"
     receivers:
-    - name: 'telegram-alerts'
-      webhook_configs:
-      - url: 'https://api.telegram.org/bot8267216338:AAFLL7IWr8J-v8pKtKNeASkm92sJWj3q-2Y/sendMessage'
-        send_resolved: true
-        http_config:
-          body: |
-            {
-              "chat_id": "-5005806102",
-              "text": "🚨 *Alert:* {{ .GroupLabels.alertname }}\n\n{{ range .Alerts }}{{ .Annotations.summary }}{{ end }}",
-              "parse_mode": "Markdown"
-            }    templates:
+    - name: 'null'
+    templates:
     - '/etc/alertmanager/config/*.tmpl'
 
   ## Alertmanager configuration directives (as string type, preferred over the config hash map)
