@@ -1,0 +1,46 @@
+initContainers:
+  - name: velero-plugin-for-aws
+    image: velero/velero-plugin-for-aws:v1.8.0
+    imagePullPolicy: IfNotPresent
+    volumeMounts:
+      - mountPath: /target
+        name: plugins
+
+configuration:
+  provider: aws
+  backupStorageLocation:
+    bucket: terraform-state-bucket-task3
+    name: default
+    provider: aws
+    config:
+      region: fra1
+      s3Url: https://fra1.digitaloceanspaces.com
+      s3ForcePathStyle: "true"
+      publicUrl: https://terraform-state-bucket-task3.fra1.digitaloceanspaces.com
+  volumeSnapshotLocation:
+    name: default
+    config:
+      region: fra1
+
+credentials:
+  useSecret: true
+  existingSecret: velero-credentials
+  mountPath: /credentials
+
+snapshotsEnabled: false
+deployRestic: true
+
+resources:
+  requests:
+    memory: "256Mi"
+    cpu: "200m"
+  limits:
+    memory: "512Mi"
+    cpu: "500m"
+
+metrics:
+  enabled: true
+  serviceMonitor:
+    enabled: true
+
+logLevel: info

@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: velero
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/KatyaPikta/infra-argo.git
+    targetRevision: HEAD
+    path: charts/velero
+    helm:
+      skipCrds: true
+      valueFiles:
+        - "../../values/velero/values.yaml"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: backup
+    
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
