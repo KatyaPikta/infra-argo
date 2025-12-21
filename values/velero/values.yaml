@@ -9,7 +9,7 @@ initContainers:
 configuration:
   backupStorageLocation:
     - name: default
-      bucket: terraform-state-bucket-task3
+      bucket: velero-backups-task3
       provider: aws
       config:
         region: fra1
