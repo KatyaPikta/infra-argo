@@ -5,6 +5,12 @@ initContainers:
     volumeMounts:
       - mountPath: /target
         name: plugins
+  - name: velero-plugin-for-csi
+    image: velero/velero-plugin-for-csi:v0.5.0
+    imagePullPolicy: IfNotPresent
+    volumeMounts:
+      - mountPath: /target
+        name: plugins
 
 configuration:
   backupStorageLocation:
@@ -19,7 +25,23 @@ configuration:
       credential:
         name: velero-credentials
         key: cloud
-  volumeSnapshotLocation: []
+  volumeSnapshotLocation: 
+    - name: do-csi
+      config:
+        region: fra1
+
+extraObjects:
+  - apiVersion: snapshot.storage.k8s.io/v1
+    kind: VolumeSnapshotClass
+    metadata:
+      name: do-csi-snapshotclass
+      labels:
+        velero.io/csi-volumesnapshot-class: "true"
+    driver: dobs.csi.digitaloceanspaces.com
+    deletionPolicy: Delete
+
+features:
+  enableCSI: true
 
 credentials:
   useSecret: true
