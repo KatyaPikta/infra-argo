@@ -10,7 +10,7 @@ configuration:
   backupStorageLocation:
     - name: default
       bucket: terraform-state-bucket-task3
-      provider: digitalocean
+      provider: aws
       config:
         region: fra1
         s3Url: https://fra1.digitaloceanspaces.com
