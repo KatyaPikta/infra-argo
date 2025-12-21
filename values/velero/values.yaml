@@ -15,7 +15,7 @@ configuration:
         region: fra1
         s3Url: https://fra1.digitaloceanspaces.com
         s3ForcePathStyle: "true"
-        publicUrl: https://terraform-state-bucket-task3.fra1.digitaloceanspaces.com
+        publicUrl: https://velero-backups-task3.fra1.digitaloceanspaces.com
       credential:
         name: velero-credentials
         key: cloud
