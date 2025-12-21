@@ -27,6 +27,7 @@ configuration:
         key: cloud
   volumeSnapshotLocation: 
     - name: default
+      provider: volumesnapshot
       config:
         region: fra1
 
