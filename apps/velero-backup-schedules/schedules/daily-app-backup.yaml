@@ -4,10 +4,13 @@ metadata:
   name: daily-myapp-backup
   namespace: backup
 spec:
-  schedule: "03 20 * * *"
+  schedule: "40 20 * * *"
   template:
     includedNamespaces:
     - myapp-task2
-    defaultVolumesToRestic: true
+    snapshotVolumes: true
+    defaultVolumesToFsBackup: false
     ttl: 720h  # 30 дней
     storageLocation: default
+    volumeSnapshotLocations:
+    - default
