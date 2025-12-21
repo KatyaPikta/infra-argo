@@ -20,3 +20,8 @@ externalSecrets:
     namespace: monitoring
     name: grafana-admin-secret
     remoteKey: secret/monitoring/grafana
+  telegram-bot-secret:
+    enabled: true
+    namespace: monitoring
+    name: telegram-bot-secret
+    remoteKey: secret/telegram/bot
