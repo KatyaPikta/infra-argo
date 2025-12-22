@@ -17,6 +17,12 @@ spec:
         app: {{ .Release.Name }}-backend
         {{- include "my-app.selectorLabels" . | nindent 8 }}
     spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        fsGroup: 1001
+        seccompProfile:
+          type: RuntimeDefault
       initContainers:
       - name: wait-for-redis
         image: busybox:1.35  
@@ -30,6 +36,14 @@ spec:
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
         - containerPort: 5000
+        securityContext:
+          runAsUser: 1001
+          runAsNonRoot: true
+          allowPrivilegeEscalation: false
+          privileged: false
+          capabilities:
+            drop: ["ALL"]
+          readOnlyRootFilesystem: false
         envFrom:
         - configMapRef:
             name: {{ .Release.Name }}-configmap        
