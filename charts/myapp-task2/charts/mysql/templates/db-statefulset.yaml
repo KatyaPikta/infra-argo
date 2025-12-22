@@ -29,6 +29,12 @@ spec:
         imagePullPolicy: {{ .Values.mysql.image.pullPolicy }}
         ports:
         - containerPort: 3306
+        securityContext:
+          runAsNonRoot: true
+          allowPrivilegeEscalation: false
+          privileged: false
+          capabilities:
+            drop: ["ALL"]
         env:
         - name: MYSQL_ROOT_PASSWORD
           valueFrom:

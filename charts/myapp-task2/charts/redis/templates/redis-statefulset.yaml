@@ -18,6 +18,11 @@ spec:
       annotations:
         backup.velero.io/backup-volumes: redis-data
     spec:
+      securityContext:
+        runAsNonRoot: true
+        fsGroup: 1003
+        seccompProfile:
+          type: RuntimeDefault
       containers:
       - name: {{ .Release.Name }}-redis
         image: "{{ .Values.redis.image.repository }}:{{ .Values.redis.image.tag }}"
@@ -28,6 +33,12 @@ spec:
         - name: redis-data
           mountPath: /data
         command: ["redis-server", "--appendonly", "yes"]
+        securityContext:
+          runAsNonRoot: true
+          allowPrivilegeEscalation: false
+          privileged: false
+          capabilities:
+            drop: ["ALL"]
         livenessProbe:
           exec:
             command:
