@@ -19,8 +19,7 @@ spec:
         backup.velero.io/backup-volumes: redis-data
     spec:
       securityContext:
-        runAsNonRoot: true
-        fsGroup: 1003
+        fsGroup: 1001
         seccompProfile:
           type: RuntimeDefault
       containers:
@@ -34,9 +33,8 @@ spec:
           mountPath: /data
         command: ["redis-server", "--appendonly", "yes"]
         securityContext:
-          runAsNonRoot: true
+          runAsUser: 1001
           allowPrivilegeEscalation: false
-          privileged: false
           capabilities:
             drop: ["ALL"]
         livenessProbe:
