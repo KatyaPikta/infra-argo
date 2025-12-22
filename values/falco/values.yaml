@@ -1,7 +1,20 @@
 driver:
   enabled: true
   kind: ebpf
-  
+
+service:
+  enabled: true
+  type: ClusterIP
+  ports:
+    - name: metrics
+      port: 8765
+      targetPort: 8765
+      protocol: TCP
+    - name: grpc
+      port: 5060
+      targetPort: 5060
+      protocol: TCP
+        
 falco:
   jsonOutput: true
   jsonIncludeOutputProperty: true
@@ -145,3 +158,13 @@ securityContext:
 
 falcosidekick:
   enabled: false
+
+metrics:
+  enabled: true
+  serviceMonitor:
+    enabled: true
+    interval: 30s
+    scrapeTimeout: 10s
+    namespace: monitoring
+    additionalLabels:
+      release: prometheus-stack
