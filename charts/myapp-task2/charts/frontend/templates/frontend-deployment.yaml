@@ -32,7 +32,7 @@ spec:
           privileged: false
           capabilities:
             drop: ["ALL"]
-          readOnlyRootFilesystem: true
+          readOnlyRootFilesystem: false
         env:
         - name: FE_HOST
           value: {{ .Release.Name }}-frontend
