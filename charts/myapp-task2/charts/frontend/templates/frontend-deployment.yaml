@@ -13,26 +13,12 @@ spec:
         app: {{ .Release.Name }}-frontend
         {{- include "my-app.selectorLabels" . | nindent 8 }}
     spec:
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 101
-        fsGroup: 101
-        seccompProfile:
-          type: RuntimeDefault
       containers:
       - name: {{ .Release.Name }}-frontend
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
         - containerPort: 80
-        securityContext:
-          runAsUser: 101
-          runAsNonRoot: true
-          allowPrivilegeEscalation: false
-          privileged: false
-          capabilities:
-            drop: ["ALL"]
-          readOnlyRootFilesystem: false
         env:
         - name: FE_HOST
           value: {{ .Release.Name }}-frontend
