@@ -23,22 +23,12 @@ spec:
         post.hook.backup.velero.io/command: '["/bin/bash", "-c", "mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -e \"UNLOCK TABLES;\" &"]'
         post.hook.backup.velero.io/container: mysql
     spec:
-      securityContext:
-        fsGroup: 999
-        seccompProfile:
-          type: RuntimeDefault
       containers:
       - name: {{ .Release.Name }}-mysql
         image: "{{ .Values.mysql.image.repository }}:{{ .Values.mysql.image.tag }}"
         imagePullPolicy: {{ .Values.mysql.image.pullPolicy }}
         ports:
         - containerPort: 3306
-        securityContext:
-          runAsUser: 999
-          allowPrivilegeEscalation: false
-          privileged: false
-          capabilities:
-            drop: ["ALL"]
         env:
         - name: MYSQL_ROOT_PASSWORD
           valueFrom:
