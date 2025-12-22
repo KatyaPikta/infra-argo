@@ -1,0 +1,147 @@
+driver:
+  enabled: true
+  kind: ebpf
+  
+falco:
+  jsonOutput: true
+  jsonIncludeOutputProperty: true
+  
+  stdoutOutput:
+    enabled: true
+    
+  fileOutput:
+    enabled: false
+    
+  httpOutput:
+    enabled: false
+    
+  rulesFile:
+    - /etc/falco/falco_rules.yaml
+    - /etc/falco/falco_rules.local.yaml
+    - /etc/falco/k8s_audit_rules.yaml
+    - /etc/falco/app_rules.yaml
+    
+  customRules:
+    app_rules.yaml: |
+      # Мониторинг MySQL в myapp-task2
+      - rule: MySQL Unauthorized Data Access
+        desc: Detect non-mysql processes accessing MySQL data files
+        condition: >
+          container and
+          k8s.ns.name = "myapp-task2" and
+          container.image.repository contains "mysql" and
+          fd.name startswith "/var/lib/mysql" and
+          not proc.name in (mysqld, mysql, mysqld_safe)
+        output: >
+          Unauthorized access to MySQL data in namespace myapp-task2
+          (proc=%proc.name file=%fd.name user=%user.name)
+        priority: WARNING
+        tags: [database, mysql, myapp]
+        
+      - rule: MySQL Privilege Escalation Attempt
+        desc: Detect MySQL privilege escalation attempts
+        condition: >
+          container and
+          k8s.ns.name = "myapp-task2" and
+          container.image.repository contains "mysql" and
+          (evt.type = execve and 
+           (evt.arg.cmd contains "SET PASSWORD" or
+            evt.arg.cmd contains "GRANT ALL PRIVILEGES"))
+        output: >
+          MySQL privilege escalation attempt detected
+          (cmd=%evt.arg.cmd container=%container.name)
+        priority: CRITICAL
+        tags: [database, mysql, security]
+        
+      # Мониторинг Redis
+      - rule: Redis Dangerous Command
+        desc: Detect dangerous Redis commands
+        condition: >
+          container and
+          k8s.ns.name = "myapp-task2" and
+          container.image.repository contains "redis" and
+          evt.type = execve and
+          (evt.arg.cmd contains "FLUSHALL" or
+           evt.arg.cmd contains "CONFIG SET" or
+           evt.arg.cmd contains "SHUTDOWN")
+        output: >
+          Dangerous Redis command executed
+          (cmd=%evt.arg.cmd container=%container.name user=%user.name)
+        priority: WARNING
+        tags: [cache, redis, security]
+        
+      # Общие security правила для namespace
+      - rule: Unexpected Shell in Container
+        desc: Detect unexpected shell sessions in production containers
+        condition: >
+          container and
+          k8s.ns.name = "myapp-task2" and
+          not k8s.ns.name in (kube-system, default) and
+          proc.name in (bash, sh, zsh) and
+          not container.image.repository contains "alpine"  # alpine использует sh
+        output: >
+          Unexpected shell in production container
+          (proc=%proc.name container=%container.name image=%container.image.repository)
+        priority: NOTICE
+        tags: [shell, process, myapp]
+        
+      - rule: Crypto Miner Detection
+        desc: Detect crypto miner processes
+        condition: >
+          container and
+          k8s.ns.name = "myapp-task2" and
+          proc.name in (xmrig, minerd, cpuminer, ccminer)
+        output: >
+          Crypto miner detected in container
+          (proc=%proc.name container=%container.name image=%container.image.repository)
+        priority: CRITICAL
+        tags: [malware, crypto, mining]
+  
+  loadPlugins: [k8saudit, json]
+  bufferedOutputs: false
+  
+  logLevel: info
+  
+kubernetes:
+  auditRules:
+    auditRulesFile: /etc/falco/k8s_audit_rules.yaml
+    auditDynamicBackend: enabled
+  
+resources:
+  requests:
+    memory: "256Mi"
+    cpu: "100m"
+  limits:
+    memory: "512Mi"
+    cpu: "500m"
+
+updateStrategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxUnavailable: 1
+
+tolerations:
+  - effect: NoSchedule
+    key: node-role.kubernetes.io/master
+    operator: Exists
+  - effect: NoSchedule
+    key: node-role.kubernetes.io/control-plane
+    operator: Exists
+
+nodeSelector: {}
+
+securityContext:
+  privileged: false
+  runAsNonRoot: true
+  seccompProfile:
+    type: RuntimeDefault
+  capabilities:
+    drop:
+      - ALL
+    add:
+      - SYS_ADMIN
+      - SYS_RESOURCE
+      - SYS_PTRACE
+
+falcosidekick:
+  enabled: false
