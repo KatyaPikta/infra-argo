@@ -15,8 +15,8 @@ spec:
     spec:
       securityContext:
         runAsNonRoot: true
-        runAsUser: 1002
-        fsGroup: 1002
+        runAsUser: 101
+        fsGroup: 101
         seccompProfile:
           type: RuntimeDefault
       containers:
@@ -26,7 +26,7 @@ spec:
         ports:
         - containerPort: 80
         securityContext:
-          runAsUser: 1002
+          runAsUser: 101
           runAsNonRoot: true
           allowPrivilegeEscalation: false
           privileged: false
