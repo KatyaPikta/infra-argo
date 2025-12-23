@@ -76,19 +76,19 @@ alertmanager:
     receivers:
     - name: 'telegram'
       webhook_configs:
-      - url: 'https://api.telegram.org/bot8267216338:AAFLL7IWr8J-v8pKtKNeASkm92sJWj3q-2Y/sendMessage?chat_id=-5005806102&parse_mode=HTML'
+      - url: 'https://api.telegram.org/bot8267216338:AAFLL7IWr8J-v8pKtKNeASkm92sJWj3q-2Y/sendMessage' #?chat_id=-5005806102&parse_mode=HTML'
         send_resolved: true
         max_alerts: 5 
-        http_config: {}
+        http_config: 
         # url_fields:
         #   chat_id: "-5005806102"  # ID чата/канала 
         #   parse_mode: "HTML" 
-        # body: |
-        #     # {
-        #     #   "chat_id": "-5005806102",
-        #     #   "text": "🚨 *Alert:* {{ .GroupLabels.alertname }}\n\n{{ range .Alerts }}{{ .Annotations.summary }}{{ end }}",
-        #     #   "parse_mode": "Markdown"
-        #     # }
+          body: |
+            {
+              "chat_id": "-5005806102",
+              "text": "🚨 *Alert:* {{ .GroupLabels.alertname }}\n\n{{ range .Alerts }}{{ .Annotations.summary }}{{ end }}",
+              "parse_mode": "Markdown"
+            }
 
 grafana:
   enabled: true
