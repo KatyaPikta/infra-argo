@@ -4,10 +4,12 @@ metadata:
   name: daily-myapp-backup
   namespace: backup
 spec:
-  schedule: "16 21 * * *"
+  schedule: "40 21 * * *"
   template:
     includedNamespaces:
     - myapp-task2
+    includedResources:
+      - "*"
     snapshotVolumes: true
     defaultVolumesToFsBackup: false
     ttl: 720h  # 30 дней
