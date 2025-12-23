@@ -543,8 +543,8 @@ alertmanager:
           - alertname = "Watchdog"
     receivers:
     - name: 'null'
-    templates:
-    - '/etc/alertmanager/config/*.tmpl'
+    # templates:
+    # - '/etc/alertmanager/config/*.tmpl'
 
   ## Alertmanager configuration directives (as string type, preferred over the config hash map)
   ## stringConfig will be used only if tplConfig is true
