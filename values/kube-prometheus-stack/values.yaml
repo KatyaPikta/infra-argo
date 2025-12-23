@@ -57,25 +57,34 @@ alertmanager:
     secrets:
       - telegram-bot-secret
   config:
+    # telegram_api_url: "https://api.telegram.org" 
     global:
+      telegram_api_url: "https://api.telegram.org" 
       resolve_timeout: 5m
       
     route:
-      receiver: 'telegram-alerts'
+      receiver: 'telegram'
       group_by: ['alertname']
       group_wait: 10s
       group_interval: 10s
       repeat_interval: 1h
 
     receivers:
-    - name: 'telegram-alerts'
-      telegram_configs:
-      - bot_token: '8267216338:AAFLL7IWr8J-v8pKtKNeASkm92sJWj3q-2Y'
-        chat_id: -5005806102
-        api_url: 'https://api.telegram.org'
-#        send_resolved: true
-        message: 'message alert'
-        parse_mode: 'HTML'
+    - name: 'telegram'
+      webhook_configs:
+      - url: 'https://api.telegram.org/bot8267216338:AAFLL7IWr8J-v8pKtKNeASkm92sJWj3q-2Y/sendMessage'
+        send_resolved: true
+        max_alerts: 5 
+        http_config: {}
+        url_fields:
+          chat_id: "-5005806102"  # ID чата/канала 
+          parse_mode: "HTML" 
+        body: |
+            # {
+            #   "chat_id": "-5005806102",
+            #   "text": "🚨 *Alert:* {{ .GroupLabels.alertname }}\n\n{{ range .Alerts }}{{ .Annotations.summary }}{{ end }}",
+            #   "parse_mode": "Markdown"
+            # }
 
 grafana:
   enabled: true
