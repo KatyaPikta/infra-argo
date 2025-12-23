@@ -54,8 +54,8 @@ alertmanager:
       limits:
         memory: 512Mi
         cpu: 500m
-    secrets:
-      - telegram-bot-secret
+    # secrets:
+    #   - telegram-bot-secret
   config:
     # telegram_api_url: "https://api.telegram.org" 
     global:
