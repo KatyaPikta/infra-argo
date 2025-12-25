@@ -12,7 +12,7 @@ spec:
       - "*"
     snapshotVolumes: true
     defaultVolumesToFsBackup: false
-    ttl: 720h  # 30 дней
+    ttl: 720h
     storageLocation: default
     volumeSnapshotLocations:
     - default
