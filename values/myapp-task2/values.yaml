@@ -3,7 +3,7 @@ replicaCountFrontend: 1
 frontend:
   image:
     repository: piktakatya/my-frontend
-    tag: d07e4ec29f22a11ccaee89b9c128cc24bbe769f4
+    tag: efc647f18155f188b8d56e681ff63c35e168181e
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
@@ -29,7 +29,7 @@ frontend:
 backend:
   image:
     repository: piktakatya/my-backend
-    tag: ba4679da9b104e3780ce9709e45efd6e9bc8fecd
+    tag: efc647f18155f188b8d56e681ff63c35e168181e
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
