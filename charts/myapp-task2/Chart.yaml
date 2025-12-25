@@ -2,8 +2,8 @@ apiVersion: v2
 name: task2
 description: A Helm chart for Kubernetes
 type: application
-version: 1.5.6
-appVersion: "ba4679da9b104e3780ce9709e45efd6e9bc8fecd"
+version: 1.5.7
+appVersion: "d07e4ec29f22a11ccaee89b9c128cc24bbe769f4"
 # dependencies:
 # - condition: frontend.enabled
 #   name: frontend
