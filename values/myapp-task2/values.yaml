@@ -1,10 +1,9 @@
 replicaCountBackend: 2
 replicaCountFrontend: 1
-
 frontend:
   image:
     repository: piktakatya/my-frontend
-    tag: "afaf837a6ba4b5b2b90bf69b81aabd5063ad0915"
+    tag: 38e837afd9022e4efefefbc8c7acf200fd7ce77e
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
@@ -12,27 +11,25 @@ frontend:
     targetPort: 80
   resources:
     requests:
-      memory: "128Mi"
-      cpu: "100m"
+      memory: 128Mi
+      cpu: 100m
     limits:
-      memory: "256Mi"
-      cpu: "200m"
+      memory: 256Mi
+      cpu: 200m
   pdb:
     enabled: true
-    minAvailable: "50%"
+    minAvailable: 50%
     maxUnavailable: 1
-
   autoscaling:
     enabled: true
     minReplicas: 2
     maxReplicas: 4
     targetCPUUtilizationPercentage: 80
     targetMemoryUtilizationPercentage: 80
-
 backend:
   image:
     repository: piktakatya/my-backend
-    tag: "afaf837a6ba4b5b2b90bf69b81aabd5063ad0915"
+    tag: 38e837afd9022e4efefefbc8c7acf200fd7ce77e
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
@@ -40,23 +37,21 @@ backend:
     targetPort: 5000
   resources:
     requests:
-      memory: "256Mi"
-      cpu: "200m"
+      memory: 256Mi
+      cpu: 200m
     limits:
-      memory: "512Mi"
-      cpu: "500m"
+      memory: 512Mi
+      cpu: 500m
   pdb:
     enabled: true
-    minAvailable: "50%"
+    minAvailable: 50%
     maxUnavailable: 1
-
   autoscaling:
     enabled: true
     minReplicas: 2
     maxReplicas: 4
     targetCPUUtilizationPercentage: 80
     targetMemoryUtilizationPercentage: 80
-
 mysql:
   image:
     repository: mysql
@@ -68,21 +63,19 @@ mysql:
     targetPort: 3306
   resources:
     requests:
-      memory: "512Mi"
-      cpu: "300m"
+      memory: 512Mi
+      cpu: 300m
     limits:
-      memory: "1Gi"
-      cpu: "500m"
+      memory: 1Gi
+      cpu: 500m
   env:
-     MYSQL_PASSWORD: "cGFzcw=="
-     MYSQL_ROOT_PASSWORD: "cGFzcw=="
+    MYSQL_PASSWORD: cGFzcw==
+    MYSQL_ROOT_PASSWORD: cGFzcw==
   persistence:
     enabled: true
-    storageClass: "do-block-storage"
+    storageClass: do-block-storage
     accessMode: ReadWriteOnce
     size: 8Gi
-
-
 redis:
   image:
     repository: redis
@@ -94,36 +87,31 @@ redis:
     targetPort: 6379
   resources:
     requests:
-      memory: "128Mi"
-      cpu: "100m"
+      memory: 128Mi
+      cpu: 100m
     limits:
-      memory: "256Mi"
-      cpu: "200m"
+      memory: 256Mi
+      cpu: 200m
   persistence:
     enabled: true
-    storageClass: "do-block-storage"
+    storageClass: do-block-storage
     accessMode: ReadWriteOnce
     size: 1Gi
-
-
 ingress:
   enabled: true
   host: task2.local
-
 configMap:
   enabled: true
   data:
-    MYSQL_USER: "root" 
-    MYSQL_DB: "tasks_db"
-    REDIS_PORT: "6379"  
-    FLASK_ENV: "development"
-    API_URL: ""
-
+    MYSQL_USER: root
+    MYSQL_DB: tasks_db
+    REDIS_PORT: '6379'
+    FLASK_ENV: development
+    API_URL: ''
 pdb:
   enabled: true
-  minAvailable: "50%"
+  minAvailable: 50%
   maxUnavailable: 1
-
 autoscaling:
   enabled: true
   minReplicas: 2
