@@ -92,7 +92,8 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   ports:
-    - port: 5000
+    - name: http
+      port: 5000
       targetPort: 5000
       protocol: TCP
   selector:
