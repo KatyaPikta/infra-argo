@@ -82,7 +82,7 @@ spec:
     - metadata:
         name: db-data
       spec:
-        accessMode: ["ReadWriteOnce"]
+        accessModes: "ReadWriteOnce"
         storageClassName: do-block-storage
         resources:
          requests:
