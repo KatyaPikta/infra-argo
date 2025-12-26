@@ -1,5 +1,5 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: {{ .Release.Name }}-redis
   labels:
@@ -53,10 +53,15 @@ spec:
           timeoutSeconds: 10
         resources:
           {{- toYaml .Values.redis.resources | nindent 12 }}
-      volumes:
-      - name: redis-data
-        persistentVolumeClaim:
-          claimName: {{ .Release.Name }}-redis-pvc
+  volumeClaimTemplates:
+    - metadata:
+        name: redis-data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: do-block-storage
+        resources:
+         requests:
+           storage: {{ .Values.redis.persistence.size | default "10Gi" }}
 ---
 apiVersion: v1
 kind: Service
