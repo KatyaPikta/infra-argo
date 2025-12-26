@@ -7,15 +7,15 @@ metadata:
     component: database
     metrics: "true"
 spec:
+  serviceName: {{ .Release.Name }}-mysql
   replicas: 1
   selector:
     matchLabels:
       app: {{ .Release.Name }}-mysql
-        app: {{ .Release.Name }}-redis
   updateStrategy:
     type: RollingUpdate
-    # rollingUpdate:
-    #   partition: 0
+    rollingUpdate:
+      partition: 0
   podManagementPolicy: OrderedReady
   template:
     metadata:
@@ -31,7 +31,7 @@ spec:
     spec:
       terminationGracePeriodSeconds: 60
       containers:
-      - name: {{ .Release.Name }}-mysql
+      - name: mysql
         image: "{{ .Values.mysql.image.repository }}:{{ .Values.mysql.image.tag }}"
         imagePullPolicy: {{ .Values.mysql.image.pullPolicy }}
         ports:
@@ -78,10 +78,15 @@ spec:
           timeoutSeconds: 20
         resources:
           {{- toYaml .Values.mysql.resources | nindent 12 }}
-      volumes:
-      - name: db-data
-        persistentVolumeClaim:
-          claimName: {{ .Release.Name }}-mysql-pvc
+      volumeClaimTemplate:
+      - metadata:
+        name: db-data
+        spec:
+          accessMode: ReadWriteOnce
+          storageClassName: do-block-storage
+          resources:
+            requests:
+              storage: {{ .Values.mysql.persistence.size | default "10Gi" }}
 ---
 apiVersion: v1
 kind: Service
