@@ -77,20 +77,6 @@ spec:
           timeoutSeconds: 20
         resources:
           {{- toYaml .Values.mysql.resources | nindent 12 }}
-      - name: mysql-exporter
-        image: prom/mysqld-exporter:v0.15.1
-        env:
-        - name: DATA_SOURCE_NAME
-          value: "root:pass@localhost:3306/"
-        ports:
-        - containerPort: 9104
-        resources:
-          requests:
-            memory: "64Mi"
-            cpu: "100m"
-          limits:
-            memory: "128Mi"
-            cpu: "200m"
   volumeClaimTemplates:
     - metadata:
         name: db-data
