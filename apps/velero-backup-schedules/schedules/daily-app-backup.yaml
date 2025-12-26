@@ -4,14 +4,24 @@ metadata:
   name: daily-myapp-backup
   namespace: backup
 spec:
-  schedule: "44 19 * * *"
+  schedule: "45 08 * * *"
   template:
     includedNamespaces:
     - myapp-task2
+    - cert-manager
+    - argocd
+    - traefik
     includedResources:
       - "*"
+    excludedResources:
+      - nodes
+      - events
+      - events.events.k8s.io
+      - backups.velero.io
+      - restores.velero.io
+      - resticrepositories.velero.io
     snapshotVolumes: true
-    defaultVolumesToFsBackup: false
+    defaultVolumesToFsBackup: true
     ttl: 720h
     storageLocation: default
     volumeSnapshotLocations:
