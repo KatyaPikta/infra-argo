@@ -11,6 +11,12 @@ spec:
   selector:
     matchLabels:
       app: {{ .Release.Name }}-mysql
+        app: {{ .Release.Name }}-redis
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      partition: 0
+  podManagementPolicy: OrderedReady
   template:
     metadata:
       labels:
@@ -23,6 +29,7 @@ spec:
         post.hook.backup.velero.io/command: '["/bin/bash", "-c", "mysql -uroot -p$MYSQL_ROOT_PASSWORD -e \"UNLOCK TABLES;\" &"]'
         post.hook.backup.velero.io/container: mysql
     spec:
+      terminationGracePeriodSeconds: 60
       containers:
       - name: {{ .Release.Name }}-mysql
         image: "{{ .Values.mysql.image.repository }}:{{ .Values.mysql.image.tag }}"

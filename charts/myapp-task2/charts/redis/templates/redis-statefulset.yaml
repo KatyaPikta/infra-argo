@@ -10,6 +10,11 @@ spec:
   selector:
     matchLabels:
       app: {{ .Release.Name }}-redis
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      partition: 0
+  podManagementPolicy: OrderedReady
   template:
     metadata:
       labels:
@@ -18,6 +23,7 @@ spec:
       annotations:
         backup.velero.io/backup-volumes: redis-data
     spec:
+      terminationGracePeriodSeconds: 60
       containers:
       - name: {{ .Release.Name }}-redis
         image: "{{ .Values.redis.image.repository }}:{{ .Values.redis.image.tag }}"
