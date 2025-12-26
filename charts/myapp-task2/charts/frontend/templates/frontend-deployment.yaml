@@ -52,6 +52,7 @@ metadata:
   labels:
       {{- include "my-app.labels" . | nindent 4 }}
     component: frontend
+    metrics: "true"
 spec:
   type: {{ .Values.service.type }}
   ports:

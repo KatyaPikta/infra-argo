@@ -5,7 +5,6 @@ metadata:
   labels:
     {{- include "my-app.labels" . | nindent 4 }}
     component: database
-    metrics: "true"
 spec:
   serviceName: {{ .Release.Name }}-mysql
   replicas: 1
@@ -95,6 +94,7 @@ metadata:
   labels:
     {{- include "my-app.labels" . | nindent 4 }}
     component: database
+    metrics: "true"
 spec:
   type: {{ .Values.mysql.service.type }}
   ports:

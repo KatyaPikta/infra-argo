@@ -70,6 +70,7 @@ metadata:
   labels:
     {{- include "my-app.labels" . | nindent 4 }}
     component: cache
+    metrics: "true"
 spec:
   type: {{ .Values.redis.service.type }}
   ports:
