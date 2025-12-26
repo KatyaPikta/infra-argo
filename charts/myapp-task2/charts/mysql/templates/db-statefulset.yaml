@@ -78,15 +78,15 @@ spec:
           timeoutSeconds: 20
         resources:
           {{- toYaml .Values.mysql.resources | nindent 12 }}
-      volumeClaimTemplate:
-      - metadata:
-        name: db-data
-        spec:
-          accessMode: ReadWriteOnce
-          storageClassName: do-block-storage
-          resources:
-            requests:
-              storage: {{ .Values.mysql.persistence.size | default "10Gi" }}
+    volumeClaimTemplates:
+     - metadata:
+       name: db-data
+       spec:
+         accessMode: ReadWriteOnce
+         storageClassName: do-block-storage
+         resources:
+          requests:
+            storage: {{ .Values.mysql.persistence.size | default "10Gi" }}
 ---
 apiVersion: v1
 kind: Service
