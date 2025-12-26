@@ -12,11 +12,11 @@ spec:
   selector:
     matchLabels:
       app: {{ .Release.Name }}-mysql
-  updateStrategy:
-    type: RollingUpdate
-    rollingUpdate:
-      partition: 0
-  podManagementPolicy: OrderedReady
+  # updateStrategy:
+  #   type: RollingUpdate
+  #   rollingUpdate:
+  #     partition: 0
+  # podManagementPolicy: OrderedReady
   template:
     metadata:
       labels:
@@ -80,9 +80,9 @@ spec:
           {{- toYaml .Values.mysql.resources | nindent 12 }}
   volumeClaimTemplates:
     - metadata:
-      name: db-data
+        name: db-data
       spec:
-        accessMode: ReadWriteOnce
+        accessMode: ["ReadWriteOnce"]
         storageClassName: do-block-storage
         resources:
          requests:
