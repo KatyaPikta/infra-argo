@@ -104,7 +104,7 @@ spec:
       port: {{ .Values.mysql.service.port }}
       targetPort: {{ .Values.mysql.service.targetPort }}
       protocol: TCP
-    - name: metrics
+    - name: mysql-exporter
       port: 9104
       targetPort: 9104
 
