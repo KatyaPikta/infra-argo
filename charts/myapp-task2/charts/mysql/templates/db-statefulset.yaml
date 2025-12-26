@@ -95,6 +95,8 @@ metadata:
     {{- include "my-app.labels" . | nindent 4 }}
     component: database
     metrics: "true"
+    app: mysql-exporter
+    app.kubernetes.io/name: prometheus-mysql-exporter 
 spec:
   type: {{ .Values.mysql.service.type }}
   ports:
