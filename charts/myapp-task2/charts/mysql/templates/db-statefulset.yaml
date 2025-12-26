@@ -98,7 +98,8 @@ metadata:
 spec:
   type: {{ .Values.mysql.service.type }}
   ports:
-    - port: {{ .Values.mysql.service.port }}
+    - name: metrics
+      port: {{ .Values.mysql.service.port }}
       targetPort: {{ .Values.mysql.service.targetPort }}
       protocol: TCP
   selector:
