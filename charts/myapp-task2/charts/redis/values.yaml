@@ -17,5 +17,5 @@ redis:
   persistence:
     enabled: true
     storageClass: "do-block-storage"
-    accessMode: ReadWriteMany
+    accessMode: ReadWriteOnce
     size: 1Gi

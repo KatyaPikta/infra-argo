@@ -71,7 +71,7 @@ mysql:
   persistence:
     enabled: true
     storageClass: do-block-storage
-    accessMode: ReadWriteMany
+    accessMode: ReadWriteOnce
     size: 8Gi
 redis:
   image:
@@ -92,7 +92,7 @@ redis:
   persistence:
     enabled: true
     storageClass: do-block-storage
-    accessMode: ReadWriteMany
+    accessMode: ReadWriteOnce
     size: 1Gi
 ingress:
   enabled: true
