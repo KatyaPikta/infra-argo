@@ -12,11 +12,11 @@ spec:
   selector:
     matchLabels:
       app: {{ .Release.Name }}-mysql
-  # updateStrategy:
-  #   type: RollingUpdate
-  #   rollingUpdate:
-  #     partition: 0
-  # podManagementPolicy: OrderedReady
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      partition: 0
+  podManagementPolicy: OrderedReady
   template:
     metadata:
       labels:
