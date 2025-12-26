@@ -4,7 +4,7 @@ metadata:
   name: daily-myapp-backup
   namespace: backup
 spec:
-  schedule: "45 10 * * *"
+  schedule: "58 16 * * *"
   template:
     includedNamespaces:
     - myapp-task2

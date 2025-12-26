@@ -68,9 +68,6 @@ mysql:
     limits:
       memory: 1Gi
       cpu: 500m
-  env:
-    MYSQL_PASSWORD: cGFzcw==
-    MYSQL_ROOT_PASSWORD: cGFzcw==
   persistence:
     enabled: true
     storageClass: do-block-storage
