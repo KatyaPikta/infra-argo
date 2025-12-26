@@ -100,9 +100,12 @@ metadata:
 spec:
   type: {{ .Values.mysql.service.type }}
   ports:
-    - name: metrics
-      port: {{ .Values.mysql.service.port }}
+    - port: {{ .Values.mysql.service.port }}
       targetPort: {{ .Values.mysql.service.targetPort }}
       protocol: TCP
+    - name: metrics
+      port: 9104
+      targetPort: 9104
+
   selector:
     app: {{ .Release.Name }}-mysql
