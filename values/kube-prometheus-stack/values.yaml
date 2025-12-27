@@ -77,7 +77,7 @@ alertmanager:
       - url: 'https://api.telegram.org/bot8267216338:AAFLL7IWr8J-v8pKtKNeASkm92sJWj3q-2Y/sendMessage` 
         send_resolved: true
         max_alerts: 5 
-        http_config: {}
+        # http_config: {}
         # # message: '{{ template "telegram.message" . }}'
         # url_fields:
         #   chat_id: "-5005806102"  # ID чата/канала 
