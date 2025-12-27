@@ -111,12 +111,12 @@ alertmanager:
       {{ if .Annotations.runbook_url }}
       📖 <b>Runbook:</b> {{ .Annotations.runbook_url }}
       {{ end }}
-    
-      {{ if .Annotations.dashboard }}
-     📊 <b>Dashboard:</b> {{ .Annotations.dashboard }}
       {{ end }}
       {{ end }}
-      {{ end }}
+    #   {{ if .Annotations.dashboard }}
+    #  📊 <b>Dashboard:</b> {{ .Annotations.dashboard }}
+    #   {{ end }}
+      
 
 grafana:
   enabled: true
