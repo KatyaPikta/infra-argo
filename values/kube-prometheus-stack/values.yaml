@@ -74,7 +74,7 @@ alertmanager:
     receivers:
     - name: 'telegram'
       webhook_configs:
-      - url: 'https://api.telegram.org/bot8267216338:AAFLL7IWr8J-v8pKtKNeASkm92sJWj3q-2Y/sendMessage?chat_id=-5005806102&parse_mode=HTML&text={{ range .Alerts }}{{ if eq $.Status "firing" }}🚨{{ else }}✅{{ end }}%20{{ $.Status | toUpper }}%20Alert%0A%0A🔥%20Alert:%20{{ .Labels.alertname }}%0A🏷️%20Severity:%20{{ .Labels.severity }}%0A📍%20Instance:%20{{ .Labels.instance }}%0A📦%20Namespace:%20{{ .Labels.namespace }}%0A📝%20Summary:%20{{ .Annotations.summary }}%0A🔍%20Description:%20{{ .Annotations.description }}%0A🕒%20Time:%20{{ .StartsAt.Format "15:04:05" }}%0A%0A{{ end }}'
+      - url: 'https://api.telegram.org/bot8267216338:AAFLL7IWr8J-v8pKtKNeASkm92sJWj3q-2Y/sendMessage` 
         send_resolved: true
         max_alerts: 5 
         http_config: {}
@@ -90,31 +90,64 @@ alertmanager:
           #   }
     templates:
     - '/etc/alertmanager/templates/*.tmpl'
+  alertmanager:
+  config:
+    global:
+      resolve_timeout: 5m
+      
+    route:
+      receiver: 'telegram'
+      group_by: ['alertname']
+      group_wait: 10s
+      group_interval: 10s
+      repeat_interval: 1h
+
+    receivers:
+    - name: 'telegram'
+      webhook_configs:
+      - url: 'https://api.telegram.org/bot8267216338:AAFLL7IWr8J-v8pKtKNeASkm92sJWj3q-2Y/sendMessage'
+        send_resolved: true
+        max_alerts: 5
+        http_config: {}
+
   templateFiles:
     telegram.tmpl: |
-      {{ define "telegram.message" }}
-      {{ if eq .Status "firing" }}🚨{{ else }}✅{{ end }} <b>{{ .Status | toUpper }}</b>
-      {{ range .Alerts }}
-    
-      🔥<b>{{ .Annotations.summary }}</b>
-      📝 {{ .Annotations.description }}
-    
-      📌 <b>Alert:</b> {{ .Labels.alertname }}
-      🏷️ <b>Severity:</b> {{ .Labels.severity | default "warning" }}
-      📍 <b>Instance:</b> {{ .Labels.instance | default "N/A" }}
-      📦 <b>Namespace:</b> {{ .Labels.namespace | default "N/A" }}
-      🏷️ <b>Pod:</b> {{ .Labels.pod | default "N/A" }}
-      🕒 <b>Started:</b> {{ .StartsAt.Format "2006-01-02 15:04:05" }}
-    
-      {{ if .Annotations.runbook_url }}
-      📖 <b>Runbook:</b> {{ .Annotations.runbook_url }}
-      {{ end }}
-      {{ end }}
-      {{ end }}
-    #   {{ if .Annotations.dashboard }}
-    #  📊 <b>Dashboard:</b> {{ .Annotations.dashboard }}
-    #   {{ end }}
+      {{ define "telegram.json" -}}
+      {
+        "chat_id": "-5005806102",
+        "parse_mode": "HTML",
+        "text": {{ template "telegram.text" . | toJson }}
+      }
+      {{- end }}
       
+      {{ define "telegram.text" -}}
+      {{- if eq .Status "firing" }}🚨{{ else }}✅{{ end }} <b>{{ .Status | toUpper }} ALERT</b>
+      {{- range .Alerts }}
+      
+      🔥 <b>Alert:</b> {{ .Labels.alertname }}
+      {{- if .Labels.severity }}
+      🏷️ <b>Severity:</b> {{ .Labels.severity }}
+      {{- end }}
+      {{- if .Labels.instance }}
+      📍 <b>Instance:</b> {{ .Labels.instance }}
+      {{- end }}
+      {{- if .Labels.namespace }}
+      📦 <b>Namespace:</b> {{ .Labels.namespace }}
+      {{- end }}
+      {{- if .Labels.pod }}
+      🏷️ <b>Pod:</b> {{ .Labels.pod }}
+      {{- end }}
+      
+      {{- if .Annotations.summary }}
+      📝 <b>Summary:</b> {{ .Annotations.summary }}
+      {{- end }}
+      {{- if .Annotations.description }}
+      🔍 <b>Description:</b> {{ .Annotations.description }}
+      {{- end }}
+      
+      🕒 <b>Time:</b> {{ .StartsAt.Format "15:04:05" }}
+      {{- end }}
+      {{- end }}    
 
 grafana:
   enabled: true
