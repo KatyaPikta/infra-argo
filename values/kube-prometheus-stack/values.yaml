@@ -80,6 +80,7 @@ alertmanager:
         send_resolved: true
         max_alerts: 5 
         http_config: {}
+        message: '{{ template "telegram.message" . }}'
         # url_fields:
         #   chat_id: "-5005806102"  # ID чата/канала 
         #   parse_mode: "HTML" 
@@ -89,6 +90,33 @@ alertmanager:
           #     "text": "🚨 *Alert:* {{ .GroupLabels.alertname }}\n\n{{ range .Alerts }}{{ .Annotations.summary }}{{ end }}",
           #     "parse_mode": "Markdown"
           #   }
+    templates:
+    - '/etc/alertmanager/templates/*.tmpl'
+  templateFiles:
+     telegram.tmpl: |
+    {{ define "telegram.message" }}
+    {{ if eq .Status "firing" }}🚨{{ else }}✅{{ end }} <b>{{ .Status | toUpper }}</b>
+    {{ range .Alerts }}
+    
+    🔥 <b>{{ .Annotations.summary }}</b>
+    📝 {{ .Annotations.description }}
+    
+    📌 <b>Alert:</b> {{ .Labels.alertname }}
+    🏷️ <b>Severity:</b> {{ .Labels.severity | default "warning" }}
+    📍 <b>Instance:</b> {{ .Labels.instance | default "N/A" }}
+    📦 <b>Namespace:</b> {{ .Labels.namespace | default "N/A" }}
+    🏷️ <b>Pod:</b> {{ .Labels.pod | default "N/A" }}
+    🕒 <b>Started:</b> {{ .StartsAt.Format "2006-01-02 15:04:05" }}
+    
+    {{ if .Annotations.runbook_url }}
+    📖 <b>Runbook:</b> {{ .Annotations.runbook_url }}
+    {{ end }}
+    
+    {{ if .Annotations.dashboard }}
+    📊 <b>Dashboard:</b> {{ .Annotations.dashboard }}
+    {{ end }}
+    {{ end }}
+    {{ end }}
 
 grafana:
   enabled: true
