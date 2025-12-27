@@ -54,8 +54,17 @@ alertmanager:
       limits:
         memory: 512Mi
         cpu: 500m
-    # secrets:
-    #   - telegram-bot-secret
+    env:
+      - name: TELEGRAM_BOT_TOKEN
+        valueFrom:
+          secretKeyRef:
+            name: telegram-bot-secret
+            key: token
+      - name: TELEGRAM_CHAT_ID
+        valueFrom:
+          secretKeyRef:
+            name: telegram-bot-secret
+            key: chat-id
   config:
     global:
       resolve_timeout: 5m
@@ -74,8 +83,8 @@ alertmanager:
     receivers:
     - name: 'telegram'
       telegram_configs:
-      - bot_token: '8267216338:AAFLL7IWr8J-v8pKtKNeASkm92sJWj3q-2Y'
-        chat_id: -5005806102
+      - bot_token: '$(TELEGRAM_BOT_TOKEN)'
+        chat_id: '$(TELEGRAM_CHAT_ID)'
         parse_mode: 'HTML'
         send_resolved: true
         message: '{{ template "telegram.default.message" . }}'
