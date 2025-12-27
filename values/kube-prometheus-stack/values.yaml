@@ -38,6 +38,24 @@ prometheus:
         path: /metrics
 
 alertmanager:
+  enabled: true
+  alertmanagerSpec:
+    storage:
+      volumeClaimTemplate:
+        spec:
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 5Gi
+    resources:
+      requests:
+        memory: 256Mi
+        cpu: 100m
+      limits:
+        memory: 512Mi
+        cpu: 500m
+    # secrets:
+    #   - telegram-bot-secret
   config:
     global:
       resolve_timeout: 5m
@@ -48,13 +66,55 @@ alertmanager:
       group_wait: 10s
       group_interval: 10s
       repeat_interval: 1h
+      routes:
+      - receiver: 'telegram'
+        match:
+          severity: critical
 
     receivers:
     - name: 'telegram'
       webhook_configs:
-      - url: 'https://api.telegram.org/bot8267216338:AAFLL7IWr8J-v8pKtKNeASkm92sJWj3q-2Y/sendMessage?chat_id=-5005806102&parse_mode=HTML&text={{ range .Alerts }}{{ if eq .Status "firing" }}🚨{{ else }}✅{{ end }}%20<b>{{ .Status | toUpper }}</b>%0A%0A🔥%20<b>{{ .Annotations.summary }}</b>%0A📝%20{{ .Annotations.description }}%0A%0A📌%20<b>Alert:</b>%20{{ .Labels.alertname }}%0A📍%20<b>Instance:</b>%20{{ .Labels.instance }}%0A📦%20<b>Namespace:</b>%20{{ .Labels.namespace }}%0A🕒%20<b>Time:</b>%20{{ .StartsAt.Format "15:04:05" }}{{ end }}'
+      - url: 'https://api.telegram.org/bot8267216338:AAFLL7IWr8J-v8pKtKNeASkm92sJWj3q-2Y/sendMessage?chat_id=-5005806102&parse_mode=HTML&text={{ range .Alerts }}{{ if eq .Status "firing" }}🚨{{ else }}✅{{ end }}%20<b>{{ .Status | toUpper }}</b>%0A%0A🔥%20<b>{{ .Annotations.summary }}</b>%0A📝%20{{ .Annotations.description }}%0A%0A📌%20<b>Alert:</b>%20{{ .Labels.alertname }}%0A📍%20<b>Instance:</b>%20{{ .Labels.instance }}%0A📦%20<b>Namespace:</b>%20{{ .Labels.namespace }}%0A🕒%20<b>Time:</b>%20{{ .StartsAt.Format "15:04:05" }}{{ end }}'  
         send_resolved: true
-        max_alerts: 5      
+        max_alerts: 5 
+        http_config: {}
+        # message: '{{ template "telegram.message" . }}'
+        # url_fields:
+        #   chat_id: "-5005806102"  # ID чата/канала 
+        #   parse_mode: "HTML" 
+          # body: |
+          #   {
+          #     "chat_id": "-5005806102",
+          #     "text": "🚨 *Alert:* {{ .GroupLabels.alertname }}\n\n{{ range .Alerts }}{{ .Annotations.summary }}{{ end }}",
+          #     "parse_mode": "Markdown"
+          #   }
+    templates:
+    - '/etc/alertmanager/templates/*.tmpl'
+  templateFiles:
+    telegram.tmpl: |
+      {{ define "telegram.message" }}
+      {{ if eq .Status "firing" }}🚨{{ else }}✅{{ end }} <b>{{ .Status | toUpper }}</b>
+      {{ range .Alerts }}
+    
+      🔥<b>{{ .Annotations.summary }}</b>
+      📝 {{ .Annotations.description }}
+    
+      📌 <b>Alert:</b> {{ .Labels.alertname }}
+      🏷️ <b>Severity:</b> {{ .Labels.severity | default "warning" }}
+      📍 <b>Instance:</b> {{ .Labels.instance | default "N/A" }}
+      📦 <b>Namespace:</b> {{ .Labels.namespace | default "N/A" }}
+      🏷️ <b>Pod:</b> {{ .Labels.pod | default "N/A" }}
+      🕒 <b>Started:</b> {{ .StartsAt.Format "2006-01-02 15:04:05" }}
+    
+      {{ if .Annotations.runbook_url }}
+      📖 <b>Runbook:</b> {{ .Annotations.runbook_url }}
+      {{ end }}
+      {{ end }}
+      {{ end }}
+    #   {{ if .Annotations.dashboard }}
+    #  📊 <b>Dashboard:</b> {{ .Annotations.dashboard }}
+    #   {{ end }}
+      
 
 grafana:
   enabled: true
