@@ -73,36 +73,19 @@ alertmanager:
 
     receivers:
     - name: 'telegram'
-      webhook_configs:
-      - url: 'https://api.telegram.org/bot8267216338:AAFLL7IWr8J-v8pKtKNeASkm92sJWj3q-2Y/sendMessage'
+      telegram_configs:
+      - bot_token: '8267216338:AAFLL7IWr8J-v8pKtKNeASkm92sJWj3q-2Y'
+        chat_id: -5005806102
+        parse_mode: 'HTML'
         send_resolved: true
-        max_alerts: 5 
-        http_config: {}
-        # # message: '{{ template "telegram.message" . }}'
-        # url_fields:
-        #   chat_id: "-5005806102"  # ID чата/канала 
-        #   parse_mode: "HTML" 
-          # body: |
-          #   {
-          #     "chat_id": "-5005806102",
-          #     "text": "🚨 *Alert:* {{ .GroupLabels.alertname }}\n\n{{ range .Alerts }}{{ .Annotations.summary }}{{ end }}",
-          #     "parse_mode": "Markdown"
-          #   }
+        message: '{{ template "telegram.default.message" . }}'
     templates:
     - '/etc/alertmanager/templates/*.tmpl'
 
   templateFiles:
     telegram.tmpl: |
-      {{ define "telegram.json" -}}
-      {
-        "chat_id": "-5005806102",
-        "parse_mode": "HTML",
-        "text": {{ template "telegram.text" . | toJson }}
-      }
-      {{- end }}
-      
-      {{ define "telegram.text" -}}
-      {{- if eq .Status "firing" }}🚨{{ else }}✅{{ end }} <b>{{ .Status | toUpper }} ALERT</b>
+      {{ define "telegram.default.message" -}}
+      {{- if eq .Status "firing" }}🚨{{ else }}✅{{ end }} <b>{{ .Status | toUpper }} Alert</b>
       {{- range .Alerts }}
       
       🔥 <b>Alert:</b> {{ .Labels.alertname }}
@@ -115,9 +98,6 @@ alertmanager:
       {{- if .Labels.namespace }}
       📦 <b>Namespace:</b> {{ .Labels.namespace }}
       {{- end }}
-      {{- if .Labels.pod }}
-      🏷️ <b>Pod:</b> {{ .Labels.pod }}
-      {{- end }}
       
       {{- if .Annotations.summary }}
       📝 <b>Summary:</b> {{ .Annotations.summary }}
@@ -128,7 +108,7 @@ alertmanager:
       
       🕒 <b>Time:</b> {{ .StartsAt.Format "15:04:05" }}
       {{- end }}
-      {{- end }}    
+      {{- end }}
 
 grafana:
   enabled: true
