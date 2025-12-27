@@ -90,25 +90,6 @@ alertmanager:
           #   }
     templates:
     - '/etc/alertmanager/templates/*.tmpl'
-  alertmanager:
-  config:
-    global:
-      resolve_timeout: 5m
-      
-    route:
-      receiver: 'telegram'
-      group_by: ['alertname']
-      group_wait: 10s
-      group_interval: 10s
-      repeat_interval: 1h
-
-    receivers:
-    - name: 'telegram'
-      webhook_configs:
-      - url: 'https://api.telegram.org/bot8267216338:AAFLL7IWr8J-v8pKtKNeASkm92sJWj3q-2Y/sendMessage'
-        send_resolved: true
-        max_alerts: 5
-        http_config: {}
 
   templateFiles:
     telegram.tmpl: |
