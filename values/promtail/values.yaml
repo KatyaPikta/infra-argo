@@ -1,92 +1,24 @@
 config:
   clients:
     - url: http://loki:3100/loki/api/v1/push
-
-  server:
-    http_listen_port: 3101
-    grpc_listen_port: 9096
-  
-  positions:
-    filename: /run/promtail/positions.yaml
-  
-  scrape_configs:
-  - job_name: kubernetes-pods
-    kubernetes_sd_configs:
-    - role: pod
-      namespaces:
-        names: []
-    
-    pipeline_stages:
+  snippets:
+    pipelineStages:
+      - cri: {}
+      - docker: {}
       - json:
           expressions:
-            level: level
-            severity: severity
-            msg: message
-            error: error
-            trace_id: trace_id
-            app: app
-            component: component
-      
+            level: ""
       - regex:
-          expression: '(?i)\b(ERROR|WARN|WARNING|INFO|DEBUG|FATAL|PANIC)\b'
-          source: 'entry'
-          name: 'level_fallback'
-      
+          expression: 'level=(?P<level>\w+)'
+      - regex:
+          expression: '^\[\d{2}:\d{2}:\d{2} (?P<level>[A-Z]{3})\]'
+      - template:
+          source: level
+          template: >-
+            {{- if eq .Value "INF" -}}info
+            {{- else if eq .Value "WRN" -}}warn
+            {{- else if eq .Value "ERR" -}}error
+            {{- else -}}{{ .Value }}{{ end }}
+          output: level
       - labels:
-          # Используем либо распаршенный level, либо fallback
-          level: level
-          severity: severity
-          namespace: namespace
-          pod_name: pod_name
-          container_name: container_name
-          app:  app
-          component: component
-    
-    # Этап 4: Фильтрация и преобразование логов перед отправкой
-      - output:
-        source: msg
-    
-    # Этап 5: Добавляем статические метки
-    relabel_configs:
-    - source_labels: [__meta_kubernetes_namespace]
-      target_label: namespace
-    - source_labels: [__meta_kubernetes_pod_name]
-      target_label: pod_name
-    - source_labels: [__meta_kubernetes_pod_container_name]
-      target_label: container_name
-    - source_labels: [__meta_kubernetes_pod_label_app]
-      target_label: app
-    - source_labels: [__meta_kubernetes_pod_label_component]
-      target_label: component
-    - source_labels: [__meta_kubernetes_pod_label_app_kubernetes_io_name]
-      target_label: k8s_app
-    - action: replace
-      replacement: $1
-      separator: /
-      source_labels:
-      - __meta_kubernetes_namespace
-      - __meta_kubernetes_pod_name
-      target_label: job
-    - action: replace
-      target_label: node
-      replacement: $1
-      source_labels:
-      - __meta_kubernetes_node_name
-
-  # Дополнительный job для системных логов нод
-  - job_name: kubernetes-nodes
-    kubernetes_sd_configs:
-    - role: node
-    relabel_configs:
-    - action: labelmap
-      regex: __meta_kubernetes_node_label_(.+)
-    - target_label: __address__
-      replacement: kubernetes.default.svc:443
-    - source_labels: [__meta_kubernetes_node_name]
-      regex: (.+)
-      target_label: __metrics_path__
-      replacement: /api/v1/nodes/${1}/proxy/logs
-    scheme: https
-    tls_config:
-      ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-    bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+          level: null
