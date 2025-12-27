@@ -80,7 +80,7 @@ alertmanager:
         send_resolved: true
         max_alerts: 5 
         http_config: {}
-        message: '{{ template "telegram.message" . }}'
+        # message: '{{ template "telegram.message" . }}'
         # url_fields:
         #   chat_id: "-5005806102"  # ID чата/канала 
         #   parse_mode: "HTML" 
