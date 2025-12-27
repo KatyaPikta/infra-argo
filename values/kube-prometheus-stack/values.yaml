@@ -74,7 +74,7 @@ alertmanager:
     receivers:
     - name: 'telegram'
       webhook_configs:
-      - url: 'https://api.telegram.org/bot8267216338:AAFLL7IWr8J-v8pKtKNeASkm92sJWj3q-2Y/sendMessage?chat_id=-5005806102&parse_mode=HTML&text={{ if eq .Status "firing" }}🚨{{ else }}✅{{ end }}%20<b>{{ .Status | toUpper }}</b>%20Alert%0A%0AAlert:%20{{ .CommonLabels.alertname }}%0ASeverity:%20{{ .CommonLabels.severity }}%0AInstance:%20{{ .CommonLabels.instance }}%0ASummary:%20{{ .CommonAnnotations.summary }}%0ADescription:%20{{ .CommonAnnotations.description }}'  
+      - url: 'https://api.telegram.org/bot8267216338:AAFLL7IWr8J-v8pKtKNeASkm92sJWj3q-2Y/sendMessage?chat_id=-5005806102&parse_mode=HTML&text={{ range .Alerts }}{{ if eq $.Status "firing" }}🚨{{ else }}✅{{ end }}%20{{ $.Status | toUpper }}%20Alert%0A%0A🔥%20Alert:%20{{ .Labels.alertname }}%0A🏷️%20Severity:%20{{ .Labels.severity }}%0A📍%20Instance:%20{{ .Labels.instance }}%0A📦%20Namespace:%20{{ .Labels.namespace }}%0A📝%20Summary:%20{{ .Annotations.summary }}%0A🔍%20Description:%20{{ .Annotations.description }}%0A🕒%20Time:%20{{ .StartsAt.Format "15:04:05" }}%0A%0A{{ end }}'
         send_resolved: true
         max_alerts: 5 
         http_config: {}
