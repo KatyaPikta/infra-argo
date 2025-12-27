@@ -85,29 +85,41 @@ alertmanager:
   templateFiles:
     telegram.tmpl: |
       {{ define "telegram.default.message" -}}
-      {{- if eq .Status "firing" }}🚨{{ else }}✅{{ end }} <b>{{ .Status | toUpper }} Alert</b>
+      {{- if eq .Status "firing" }}🚨{{ else }}✅{{ end }} <b>{{ .Status | toUpper }}</b> - {{ .GroupLabels.alertname | default "Alert" }}
+  
+      📊 <b>Affected Services:</b>
+      {{- range $index, $alert := .Alerts }}
+      {{- if eq $index 0 }} {{ else }}, {{ end }}
+      {{ $alert.Labels.service | default $alert.Labels.job }}
+      {{- end }}
+  
+      📦 <b>Namespaces:</b>
+      {{- $namespaces := list -}}
+      {{- range .Alerts -}}
+        {{- $ns := .Labels.namespace -}}
+        {{- if and $ns (not (in $namespaces $ns)) -}}
+          {{- $namespaces = append $namespaces $ns -}}
+        {{- end -}}
+      {{- end -}}
+      {{- range $index, $ns := $namespaces -}}
+        {{- if eq $index 0 }} {{ else }}, {{ end }}{{ $ns }}
+      {{- end }}
+  
+      🔥 <b>Main Issue:</b>
+      {{- with index .Alerts 0 }}
+      {{ .Annotations.summary }}
+      {{- end }}
+  
+      ─────────────────────
+      <b>Details:</b>
       {{- range .Alerts }}
-      
-      🔥 <b>Alert:</b> {{ .Labels.alertname }}
-      {{- if .Labels.severity }}
-      🏷️ <b>Severity:</b> {{ .Labels.severity }}
+  
+      • <b>{{ .Labels.service | default .Labels.job }}</b> ({{ .Labels.namespace }})
+        {{ .Annotations.description }}
       {{- end }}
-      {{- if .Labels.instance }}
-      📍 <b>Instance:</b> {{ .Labels.instance }}
-      {{- end }}
-      {{- if .Labels.namespace }}
-      📦 <b>Namespace:</b> {{ .Labels.namespace }}
-      {{- end }}
-      
-      {{- if .Annotations.summary }}
-      📝 <b>Summary:</b> {{ .Annotations.summary }}
-      {{- end }}
-      {{- if .Annotations.description }}
-      🔍 <b>Description:</b> {{ .Annotations.description }}
-      {{- end }}
-      
-      🕒 <b>Time:</b> {{ .StartsAt.Format "15:04:05" }}
-      {{- end }}
+  
+      🕒 <b>Alert Time:</b> {{ (index .Alerts 0).StartsAt.Format "15:04:05" }}
+      🔢 <b>Total Instances:</b> {{ len .Alerts }}
       {{- end }}
 
 grafana:
