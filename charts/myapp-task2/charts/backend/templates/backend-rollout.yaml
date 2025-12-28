@@ -1,39 +1,21 @@
-apiVersion: argoproj.io/v1alpha1
-kind: Rollout
+apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: {{ .Release.Name }}-backend
   labels:
     {{- include "my-app.labels" . | nindent 4 }}
     component: backend
     metrics: "true"
-  annotations:
-    argocd.argoproj.io/sync-wave: "0"
 spec:
   replicas: {{ .Values.replicaCountBackend }}
-  revisionHistoryLimit: 2
-  strategy:
-    blueGreen:
-      activeService: {{ .Release.Name }}-backend-active
-      previewService: {{ .Release.Name }}-backend-preview
-      
-      autoPromotionEnabled: false
-      autoPromotionSeconds: 30
-      
-      # prePromotionAnalysis:
-      #   templates:
-      #   - templateName: smoke-tests
-      
-      scaleDownDelaySeconds: 30
   selector:
     matchLabels:
       app: {{ .Release.Name }}-backend
-      version: stable
   template:
     metadata:
       labels:
         app: {{ .Release.Name }}-backend
         {{- include "my-app.selectorLabels" . | nindent 8 }}
-        version: stable
     spec:
       securityContext:
         runAsNonRoot: true
@@ -102,39 +84,17 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Release.Name }}-backend-active
-  labels:
-    {{- include "my-app.labels" . | nindent 4 }}
-    component: backend
-    metrics: "true"
-  annotations:
-    argocd.argoproj.io/sync-wave: "-2"
-  spec:
-    type: {{ .Values.service.type }}
-    ports:
-    - name: http
-      port: 5000
-      targetPort: 5000
-      protocol: TCP
-    selector:
-      app: {{ .Release.Name }}-backend
-      version: stable
-
-apiVersion: v1
-kind: Service
-metadata:
-  name: {{ .Release.Name }}-backend-preview
+  name: {{ .Release.Name }}-backend
   labels:
     {{- include "my-app.labels" . | nindent 4 }}
     component: backend
     metrics: "true"
 spec:
   type: {{ .Values.service.type }}
-    ports:
+  ports:
     - name: http
       port: 5000
       targetPort: 5000
       protocol: TCP
-    selector:
-      app: {{ .Release.Name }}-backend
-      version: candidate
+  selector:
+    app: {{ .Release.Name }}-backend
