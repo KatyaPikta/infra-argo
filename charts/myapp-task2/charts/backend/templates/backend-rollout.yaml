@@ -25,11 +25,13 @@ spec:
   selector:
     matchLabels:
       app: {{ .Release.Name }}-backend
+      version: stable
   template:
     metadata:
       labels:
         app: {{ .Release.Name }}-backend
         {{- include "my-app.selectorLabels" . | nindent 8 }}
+        version: stable
     spec:
       securityContext:
         runAsNonRoot: true
