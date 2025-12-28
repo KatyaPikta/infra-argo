@@ -6,22 +6,24 @@ metadata:
     {{- include "my-app.labels" . | nindent 4 }}
     component: backend
     metrics: "true"
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
 spec:
   replicas: {{ .Values.replicaCountBackend }}
   revisionHistoryLimit: 2
-  # strategy:
-  #   blueGreen:
-  #     activeService: {{ .Release.Name }}-backend-active
-  #     previewService: {{ .Release.Name }}-backend-preview
+  strategy:
+    blueGreen:
+      activeService: {{ .Release.Name }}-backend-active
+      previewService: {{ .Release.Name }}-backend-preview
       
-  #     autoPromotionEnabled: false
-  #     autoPromotionSeconds: 30
+      autoPromotionEnabled: false
+      autoPromotionSeconds: 30
       
-  #     # prePromotionAnalysis:
-  #     #   templates:
-  #     #   - templateName: smoke-tests
+      # prePromotionAnalysis:
+      #   templates:
+      #   - templateName: smoke-tests
       
-  #     scaleDownDelaySeconds: 30
+      scaleDownDelaySeconds: 30
   selector:
     matchLabels:
       app: {{ .Release.Name }}-backend
@@ -105,16 +107,18 @@ metadata:
     {{- include "my-app.labels" . | nindent 4 }}
     component: backend
     metrics: "true"
-spec:
-  type: {{ .Values.service.type }}
-  ports:
+  annotations:
+    argocd.argoproj.io/sync-wave: "-2"
+  spec:
+    type: {{ .Values.service.type }}
+    ports:
     - name: http
       port: 5000
       targetPort: 5000
       protocol: TCP
-  selector:
-    app: {{ .Release.Name }}-backend
-    version: stable
+    selector:
+      app: {{ .Release.Name }}-backend
+      version: stable
 
 apiVersion: v1
 kind: Service
@@ -126,11 +130,11 @@ metadata:
     metrics: "true"
 spec:
   type: {{ .Values.service.type }}
-  ports:
+    ports:
     - name: http
       port: 5000
       targetPort: 5000
       protocol: TCP
-  selector:
-    app: {{ .Release.Name }}-backend
-    version: candidate
+    selector:
+      app: {{ .Release.Name }}-backend
+      version: candidate

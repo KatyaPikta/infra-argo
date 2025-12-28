@@ -5,19 +5,19 @@ metadata:
 spec:
   replicas: {{ .Values.replicaCountFrontend }}
   revisionHistoryLimit: 2
-  # strategy:
-  #   blueGreen:
-  #     activeService: {{ .Release.Name }}-frontend-active
-  #     previewService: {{ .Release.Name }}-frontend-preview
+  strategy:
+    blueGreen:
+      activeService: {{ .Release.Name }}-frontend-active
+      previewService: {{ .Release.Name }}-frontend-preview
       
-  #     autoPromotionEnabled: false
-  #     autoPromotionSeconds: 30
+      autoPromotionEnabled: false
+      autoPromotionSeconds: 30
       
-  #     # prePromotionAnalysis:
-  #     #   templates:
-  #     #   - templateName: smoke-tests
+      # prePromotionAnalysis:
+      #   templates:
+      #   - templateName: smoke-tests
       
-  #     scaleDownDelaySeconds: 30
+      scaleDownDelaySeconds: 30
   selector:
     matchLabels:
       app: {{ .Release.Name }}-frontend
@@ -66,7 +66,7 @@ kind: Service
 metadata:
   name: {{ .Release.Name }}-frontend-active
   labels:
-      {{- include "my-app.labels" . | nindent 4 }}
+    {{- include "my-app.labels" . | nindent 4 }}
     component: frontend
     metrics: "true"
     version: stable
@@ -85,7 +85,7 @@ kind: Service
 metadata:
   name: {{ .Release.Name }}-frontend-preview
   labels:
-      {{- include "my-app.labels" . | nindent 4 }}
+    {{- include "my-app.labels" . | nindent 4 }}
     component: frontend
     metrics: "true"
     version: candidate
