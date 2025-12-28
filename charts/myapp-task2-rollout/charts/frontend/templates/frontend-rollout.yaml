@@ -10,7 +10,7 @@ spec:
   
   strategy:
     blueGreen:
-      activeService: rollout-frontend-active
+      activeService: rollout-frontend
       previewService: rollout-frontend-preview
       
       autoPromotionEnabled: false
