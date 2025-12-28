@@ -17,9 +17,8 @@ spec:
       previewService: rollout-backend-preview
       
       autoPromotionEnabled: false
-      autoPromotionSeconds: 0
       previewReplicaCount: 2
-      scaleDownDelaySeconds: 30
+      scaleDownDelaySeconds: 300
   selector:
     matchLabels:
       app: rollout-backend
