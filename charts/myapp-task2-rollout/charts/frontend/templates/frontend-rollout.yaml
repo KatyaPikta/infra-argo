@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Rollout
 metadata:
-  name: {{ .Release.Name }}-frontend
+  name: rollout-frontend
   annotations:
     argocd.argoproj.io/sync-wave: "0"
 spec:
@@ -10,36 +10,35 @@ spec:
   
   strategy:
     blueGreen:
-      activeService: {{ .Release.Name }}-frontend-active
-      previewService: {{ .Release.Name }}-frontend-preview
+      activeService: rollout-frontend-active
+      previewService: rollout-frontend-preview
       
       autoPromotionEnabled: false
+      autoPromotionSeconds: 3000
       
       scaleDownDelaySeconds: 30
   selector:
     matchLabels:
-      app: {{ .Release.Name }}-frontend
-      version: stable
+      app: rollout-frontend
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}-frontend
+        app: rollout-frontend
         {{- include "my-app.selectorLabels" . | nindent 8 }}
-        version: stable
     spec:
       containers:
-      - name: {{ .Release.Name }}-frontend
+      - name: rollout-frontend
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
         - containerPort: 80
         env:
         - name: FE_HOST
-          value: {{ .Release.Name }}-frontend
+          value: rollout-frontend
         - name: API_URL
           valueFrom: 
             configMapKeyRef:
-              name: {{ .Release.Name }}-configmap
+              name: rollout-configmap
               key: API_URL
         livenessProbe:
           httpGet:

@@ -1,10 +1,11 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Rollout
 metadata:
-  name: {{ .Release.Name }}-backend
+  name: rollout-backend
   labels:
     {{- include "my-app.labels" . | nindent 4 }}
     component: backend
+    app: rollout-backend
     metrics: "true"
 spec:
   replicas: {{ .Values.replicaCountBackend }}
@@ -12,22 +13,21 @@ spec:
   
   strategy:
     blueGreen:
-      activeService: {{ .Release.Name }}-backend-active
-      previewService: {{ .Release.Name }}-backend-preview
+      activeService: rollout-backend
+      previewService: rollout-backend-preview
       
       autoPromotionEnabled: false
+      autoPromotionSeconds: 3000
       
       scaleDownDelaySeconds: 30
   selector:
     matchLabels:
-      app: {{ .Release.Name }}-backend
-      version: stable
+      app: rollout-backend
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}-backend
+        app: rollout-backend
         {{- include "my-app.selectorLabels" . | nindent 8 }}
-        version: stable
     spec:
       securityContext:
         runAsNonRoot: true
@@ -38,12 +38,12 @@ spec:
       initContainers:
       - name: wait-for-redis
         image: busybox:1.35  
-        command: ['sh', '-c', 'until nc -z {{ .Release.Name }}-redis 6379; do echo "Waiting for Redis..."; sleep 2; done; echo "Redis ready"']
+        command: ['sh', '-c', 'until nc -z rollout-redis 6379; do echo "Waiting for Redis..."; sleep 2; done; echo "Redis ready"']
       - name: wait-for-mysql
         image: busybox:1.35
-        command: ['sh', '-c', 'until nc -z {{ .Release.Name }}-mysql 3306; do echo "Waiting for MySQL..."; sleep 2; done; echo "MySQL ready"']
+        command: ['sh', '-c', 'until nc -z rollout-mysql 3306; do echo "Waiting for MySQL..."; sleep 2; done; echo "MySQL ready"']
       containers:
-      - name: {{ .Release.Name }}-backend
+      - name: rollout-backend
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
@@ -58,14 +58,14 @@ spec:
           readOnlyRootFilesystem: false
         envFrom:
         - configMapRef:
-            name: {{ .Release.Name }}-configmap        
+            name: rollout-configmap        
         env:
         - name: MYSQL_HOST
-          value: {{ .Release.Name }}-mysql
+          value: rollout-mysql
         - name: MYSQL_USER
           value: "root"
         - name: REDIS_HOST
-          value: {{ .Release.Name }}-redis
+          value: rollout-redis
         - name: MYSQL_ROOT_PASSWORD
           valueFrom:
             secretKeyRef:

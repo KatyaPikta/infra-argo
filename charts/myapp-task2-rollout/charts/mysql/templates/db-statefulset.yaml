@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ .Release.Name }}-mysql
+  name: rollout-mysql
   labels:
     {{- include "my-app.labels" . | nindent 4 }}
     component: database
 spec:
-  serviceName: {{ .Release.Name }}-mysql
+  serviceName: rollout-mysql
   replicas: 1
   selector:
     matchLabels:
-      app: {{ .Release.Name }}-mysql
+      app: rollout-mysql
   updateStrategy:
     type: RollingUpdate
     rollingUpdate:
@@ -19,7 +19,7 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}-mysql
+        app: rollout-mysql
         {{- include "my-app.selectorLabels" . | nindent 8 }}
       annotations:
         backup.velero.io/backup-volumes: db-data
@@ -90,7 +90,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Release.Name }}-mysql
+  name: rollout-mysql
   labels:
     {{- include "my-app.labels" . | nindent 4 }}
     component: database
@@ -109,4 +109,4 @@ spec:
       targetPort: 9104
 
   selector:
-    app: {{ .Release.Name }}-mysql
+    app: rollout-mysql

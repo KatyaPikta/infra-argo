@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ .Release.Name }}-redis
+  name: rollout-redis
   labels:
     {{- include "my-app.labels" . | nindent 4 }}
     component: cache
@@ -9,7 +9,7 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: {{ .Release.Name }}-redis
+      app: rollout-redis
   updateStrategy:
     type: RollingUpdate
     rollingUpdate:
@@ -18,14 +18,14 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}-redis
+        app: rollout-redis
         {{- include "my-app.selectorLabels" . | nindent 8 }}
       annotations:
         backup.velero.io/backup-volumes: redis-data
     spec:
       terminationGracePeriodSeconds: 60
       containers:
-      - name: {{ .Release.Name }}-redis
+      - name: rollout-redis
         image: "{{ .Values.redis.image.repository }}:{{ .Values.redis.image.tag }}"
         imagePullPolicy: {{ .Values.redis.image.pullPolicy }}
         ports:
@@ -66,7 +66,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Release.Name }}-redis
+  name: rollout-redis
   labels:
     {{- include "my-app.labels" . | nindent 4 }}
     component: cache
@@ -78,4 +78,4 @@ spec:
       targetPort: {{ .Values.redis.service.targetPort }}
       protocol: TCP
   selector:
-    app: {{ .Release.Name }}-redis
+    app: rollout-redis
