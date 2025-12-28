@@ -1,5 +1,5 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
 metadata:
   name: {{ .Release.Name }}-backend
   labels:
@@ -8,6 +8,20 @@ metadata:
     metrics: "true"
 spec:
   replicas: {{ .Values.replicaCountBackend }}
+  revisionHistoryLimit: 2
+  strategy:
+    blueGreen:
+      activeService: {{ .Release.Name }}-backend-active
+      previewService: {{ .Release.Name }}-backend-preview
+      
+      autoPromotionEnabled: false
+      autoPromotionSeconds: 30
+      
+      # prePromotionAnalysis:
+      #   templates:
+      #   - templateName: smoke-tests
+      
+      scaleDownDelaySeconds: 30
   selector:
     matchLabels:
       app: {{ .Release.Name }}-backend
@@ -84,7 +98,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Release.Name }}-backend
+  name: {{ .Release.Name }}-backend-active
   labels:
     {{- include "my-app.labels" . | nindent 4 }}
     component: backend
@@ -98,3 +112,23 @@ spec:
       protocol: TCP
   selector:
     app: {{ .Release.Name }}-backend
+    version: stable
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-backend-preview
+  labels:
+    {{- include "my-app.labels" . | nindent 4 }}
+    component: backend
+    metrics: "true"
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - name: http
+      port: 5000
+      targetPort: 5000
+      protocol: TCP
+  selector:
+    app: {{ .Release.Name }}-backend
+    version: candidate
