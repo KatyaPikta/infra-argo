@@ -18,7 +18,7 @@ spec:
       
       autoPromotionEnabled: false
       autoPromotionSeconds: 3000
-      
+      previewReplicaCount: 2
       scaleDownDelaySeconds: 30
   selector:
     matchLabels:
