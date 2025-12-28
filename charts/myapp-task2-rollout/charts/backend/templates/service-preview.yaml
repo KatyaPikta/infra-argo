@@ -5,7 +5,7 @@ metadata:
   name: {{ .Release.Name }}-backend-preview
   namespace: {{ .Values.namespace }}
   annotations:
-    argocd.argoproj.io/sync-wave: "-2"
+    argocd.argoproj.io/sync-wave: "-1"
   labels:
     {{- include "my-app.labels" . | nindent 4 }}
     component: backend
@@ -19,4 +19,4 @@ spec:
       protocol: TCP
   selector:
     app: {{ .Release.Name }}-backend
-    version: candidate
+    version: stable
