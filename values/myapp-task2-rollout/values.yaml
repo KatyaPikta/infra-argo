@@ -29,7 +29,7 @@ frontend:
 backend:
   image:
     repository: piktakatya/my-backend
-    tag: 2e9d4eb1dc18f13423c4e57abbf2e2560736ec56
+    tag: 1861354b2ee454efb728a80280fc02225fdd6292
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
