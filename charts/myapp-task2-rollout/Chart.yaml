@@ -2,8 +2,8 @@ apiVersion: v2
 name: rollout
 description: A Helm chart for Kubernetes
 type: application
-version: 1.5.10
-appVersion: "ab744f3c9b41237bfe368382e0d41cc67eeaf192"
+version: 1.5.11
+appVersion: "2e9d4eb1dc18f13423c4e57abbf2e2560736ec56"
 # dependencies:
 # - condition: frontend.enabled
 #   name: frontend
