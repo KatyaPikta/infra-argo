@@ -47,7 +47,7 @@ backend:
     minAvailable: 50%
     maxUnavailable: 1
   autoscaling:
-    enabled: true
+    enabled: false
     minReplicas: 2
     maxReplicas: 4
     targetCPUUtilizationPercentage: 80
@@ -110,7 +110,7 @@ pdb:
   minAvailable: 50%
   maxUnavailable: 1
 autoscaling:
-  enabled: true
+  enabled: false
   minReplicas: 2
   maxReplicas: 4
   targetCPUUtilizationPercentage: 80
