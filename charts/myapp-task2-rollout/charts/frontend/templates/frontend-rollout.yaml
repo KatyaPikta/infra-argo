@@ -14,7 +14,6 @@ spec:
       previewService: {{ .Release.Name }}-frontend-preview
       
       autoPromotionEnabled: false
-      autoPromotionSeconds: 30
       
       scaleDownDelaySeconds: 30
   selector:
