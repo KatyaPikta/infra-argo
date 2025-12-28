@@ -1,0 +1,112 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Release.Name }}-mysql
+  labels:
+    {{- include "my-app.labels" . | nindent 4 }}
+    component: database
+spec:
+  serviceName: {{ .Release.Name }}-mysql
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-mysql
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      partition: 0
+  podManagementPolicy: OrderedReady
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-mysql
+        {{- include "my-app.selectorLabels" . | nindent 8 }}
+      annotations:
+        backup.velero.io/backup-volumes: db-data
+        pre.hook.backup.velero.io/command: '["/bin/bash", "-c", "mysql -uroot -p$MYSQL_ROOT_PASSWORD -e \"FLUSH TABLES WITH READ LOCK; SELECT SLEEP(5);\" &"]'
+        pre.hook.backup.velero.io/container: mysql
+        post.hook.backup.velero.io/command: '["/bin/bash", "-c", "mysql -uroot -p$MYSQL_ROOT_PASSWORD -e \"UNLOCK TABLES;\" &"]'
+        post.hook.backup.velero.io/container: mysql
+    spec:
+      terminationGracePeriodSeconds: 60
+      containers:
+      - name: mysql
+        image: "{{ .Values.mysql.image.repository }}:{{ .Values.mysql.image.tag }}"
+        imagePullPolicy: {{ .Values.mysql.image.pullPolicy }}
+        ports:
+        - containerPort: 3306
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: app-secrets
+              key: MYSQL_ROOT_PASSWORD
+        - name: MYSQL_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: app-secrets
+              key: MYSQL_DATABASE
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: app-secrets
+              key: MYSQL_PASSWORD
+        volumeMounts:
+        - name: db-data
+          mountPath: /var/lib/mysql
+        livenessProbe:
+          exec:
+            command:
+            - mysqladmin
+            - ping
+            - -h
+            - localhost
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 20
+          failureThreshold: 10
+        readinessProbe:
+          exec:
+            command:
+            - mysqladmin
+            - ping
+            - -h
+            - localhost
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 20
+        resources:
+          {{- toYaml .Values.mysql.resources | nindent 12 }}
+  volumeClaimTemplates:
+    - metadata:
+        name: db-data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: do-block-storage
+        resources:
+         requests:
+           storage: {{ .Values.mysql.persistence.size | default "10Gi" }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-mysql
+  labels:
+    {{- include "my-app.labels" . | nindent 4 }}
+    component: database
+    metrics: "true"
+    app: mysql-exporter
+    app.kubernetes.io/name: prometheus-mysql-exporter 
+spec:
+  type: {{ .Values.mysql.service.type }}
+  ports:
+    - name: data
+      port: {{ .Values.mysql.service.port }}
+      targetPort: {{ .Values.mysql.service.targetPort }}
+      protocol: TCP
+    - name: mysql-exporter
+      port: 9104
+      targetPort: 9104
+
+  selector:
+    app: {{ .Release.Name }}-mysql

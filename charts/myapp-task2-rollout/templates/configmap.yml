@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-configmap
+data:
+  FLASK_ENV: {{ .Values.configMap.data.FLASK_ENV | default "development" }}
+  MYSQL_DB: {{ .Values.configMap.data.MYSQL_DB | default "tasks_db" }}
+  MYSQL_USER: {{ .Values.configMap.data.MYSQL_USER | default "root" }}
+  MYSQL_PORT: {{ .Values.configMap.data.MYSQL_PORT |  default "3306" | quote }}
+  REDIS_PORT: {{ .Values.configMap.data.REDIS_PORT |  default "6379" | quote }}
+  API_URL: {{ .Values.configMap.data.API_URL | quote }}

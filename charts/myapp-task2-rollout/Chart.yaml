@@ -1,0 +1,21 @@
+apiVersion: v2
+name: rollout
+description: A Helm chart for Kubernetes
+type: application
+version: 1.5.9
+appVersion: "9273a56cf4f098f618d11872f0d002e4848df3ce"
+# dependencies:
+# - condition: frontend.enabled
+#   name: frontend
+#   repository: ""
+# - condition: backend.enabled
+#   name: backend
+#   repository: ""
+# - condition: mysql.enabled
+#   name: mysql
+#   repository: https://charts.bitnami.com/bitnami
+#   version: 8.0.0
+# - condition: redis.enabled
+#   name: redis
+#   repository: https://charts.bitnami.com/bitnami
+#   version: 17.0.0

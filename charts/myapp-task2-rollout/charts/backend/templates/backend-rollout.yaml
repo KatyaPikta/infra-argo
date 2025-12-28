@@ -1,0 +1,94 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: {{ .Release.Name }}-backend
+  labels:
+    {{- include "my-app.labels" . | nindent 4 }}
+    component: backend
+    metrics: "true"
+spec:
+  replicas: {{ .Values.replicaCountBackend }}
+  revisionHistoryLimit: 2
+  
+  strategy:
+    blueGreen:
+      activeService: {{ .Release.Name }}-backend-active
+      previewService: {{ .Release.Name }}-backend-preview
+      
+      autoPromotionEnabled: false
+      autoPromotionSeconds: 30
+      
+      scaleDownDelaySeconds: 30
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-backend
+      version: stable
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-backend
+        {{- include "my-app.selectorLabels" . | nindent 8 }}
+        version: stable
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        fsGroup: 1001
+        seccompProfile:
+          type: RuntimeDefault
+      initContainers:
+      - name: wait-for-redis
+        image: busybox:1.35  
+        command: ['sh', '-c', 'until nc -z {{ .Release.Name }}-redis 6379; do echo "Waiting for Redis..."; sleep 2; done; echo "Redis ready"']
+      - name: wait-for-mysql
+        image: busybox:1.35
+        command: ['sh', '-c', 'until nc -z {{ .Release.Name }}-mysql 3306; do echo "Waiting for MySQL..."; sleep 2; done; echo "MySQL ready"']
+      containers:
+      - name: {{ .Release.Name }}-backend
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - containerPort: 5000
+        securityContext:
+          runAsUser: 1001
+          runAsNonRoot: true
+          allowPrivilegeEscalation: false
+          privileged: false
+          capabilities:
+            drop: ["ALL"]
+          readOnlyRootFilesystem: false
+        envFrom:
+        - configMapRef:
+            name: {{ .Release.Name }}-configmap        
+        env:
+        - name: MYSQL_HOST
+          value: {{ .Release.Name }}-mysql
+        - name: MYSQL_USER
+          value: "root"
+        - name: REDIS_HOST
+          value: {{ .Release.Name }}-redis
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: app-secrets
+              key: MYSQL_ROOT_PASSWORD
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: app-secrets
+              key: MYSQL_PASSWORD
+        livenessProbe:
+          tcpSocket:
+            port: 5000
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          timeoutSeconds: 10
+          failureThreshold: 3
+        readinessProbe:
+          tcpSocket:
+            port: 5000
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 10
+        resources:
+          {{- toYaml .Values.resources | nindent 12 }}

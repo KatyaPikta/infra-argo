@@ -1,0 +1,21 @@
+mysql:
+  image:
+    repository: mysql
+    tag: 8.0
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 3306
+    targetPort: 3306
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "300m"
+    limits:
+      memory: "1Gi"
+      cpu: "500m"
+  persistence:
+    enabled: true
+    storageClass: "do-block-storage"
+    accessMode: ReadWriteOnce
+    size: 8Gi
