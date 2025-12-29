@@ -15,9 +15,10 @@ spec:
     blueGreen:
       activeService: rollout-backend
       previewService: rollout-backend-preview
-      
+      promotion:
+        pause:
+          duration: 0
       autoPromotionEnabled: false
-      previewReplicaCount: 2
       scaleDownDelaySeconds: 300
   selector:
     matchLabels:
