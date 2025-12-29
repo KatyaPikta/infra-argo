@@ -60,3 +60,6 @@ spec:
 
 ```
 - Пуш в main ветку argo-репозитория. Создание и deploy нового приложения произойдет автоматически
+
+## Deployment Blue-Green Strategy
+![Diagram](deployment_strategy.drawio.png)
