@@ -1,3 +1,4 @@
+# what is the difference between myapp-task2-rollout chart?
 replicaCountBackend: 2
 replicaCountFrontend: 1
 

@@ -1,9 +1,14 @@
+[//]: # (нет общего описания репозитория)
+
 ## Требования
+
 - Kubernetes кластер
 - ArgoCD установленный и доступный
 - Helm
 - Git repository access
+
 ## Структура репозитория argo
+
 ```text
 argo-helm-deployments/
 ├── README.md                          # Этот файл
@@ -15,10 +20,13 @@ argo-helm-deployments/
 │       └── values.yaml
 └── root-app.yaml                      # ArgoCD root configuration
 ```
-##  Добавление нового приложения в ArgoCD
+
+## Добавление нового приложения в ArgoCD
+
 - Клонируем репозиторий argo
 - Подготовка Helm Chart: либо пишем свой чарт, либо клонируем уже готовый чарт
 - Cоздаем values файлы values/newapp/values.yaml
+
 ```yaml
 replicaCount: 3
 image:
@@ -30,7 +38,9 @@ resources:
 autoscaling:
   enabled: true
 ```
+
 - Создаем ArgoCD Application манифест
+
 ```yaml
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -49,7 +59,7 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: newapp
-    
+
   syncPolicy:
     automated:
       prune: true
@@ -59,7 +69,11 @@ spec:
       - ServerSideApply=true
 
 ```
+
 - Пуш в main ветку argo-репозитория. Создание и deploy нового приложения произойдет автоматически
 
 ## Deployment Blue-Green Strategy
+
+[//]: # (диаграммы и картинки лучше складывать в отдельную папку, например img)
+[//]: # (Argo Rollout Controller ----- Text ----> Service: rollout-preview)
 ![Diagram](deployment_strategy.drawio.png)
